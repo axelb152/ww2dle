@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { SettingsData } from "../hooks/useSettings";
 import { useMode } from "../hooks/useMode";
 import { useBattle } from "../hooks/useBattle";
+import { getHint } from "../domain/hints";
 
 function getDayString() {
   return DateTime.now().toFormat("yyyy-MM-dd");
@@ -44,6 +45,9 @@ export function Game({ settingsData }: GameProps) {
   const gameEnded =
     guesses.length === MAX_TRY_COUNT ||
     guesses[guesses.length - 1]?.distance === 0;
+
+  const gameWon = guesses[guesses.length - 1]?.distance === 0;
+  const hint = gameEnded ? null : getHint(guesses.length, battle);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -131,6 +135,14 @@ export function Game({ settingsData }: GameProps) {
       <div className="my-2">
         {gameEnded ? (
           <>
+            <div
+              className={`text-center font-bold mb-2 ${
+                gameWon ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {getBattleName(i18n.resolvedLanguage, battle)} ({battle.year},{" "}
+              {battle.theater})
+            </div>
             <Share
               guesses={guesses}
               dayString={dayString}
@@ -151,6 +163,13 @@ export function Game({ settingsData }: GameProps) {
           </>
         ) : (
           <form onSubmit={handleSubmit}>
+            {hint != null && (
+              <div className="text-center text-sm my-1">
+                {hint.type === "year"
+                  ? t("hintYear", { year: hint.value })
+                  : t("hintTheater", { theater: hint.value })}
+              </div>
+            )}
             <div className="flex flex-col">
               <BattleInput
                 currentGuess={currentGuess}
