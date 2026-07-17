@@ -13,11 +13,7 @@
 // coastline + country borders as lines instead of a solid fill.
 import * as fs from "fs";
 import * as path from "path";
-import {
-  geoOrthographic,
-  geoPath,
-  GeoPermissibleObjects,
-} from "d3-geo";
+import { geoOrthographic, geoPath, GeoPermissibleObjects } from "d3-geo";
 import sharp from "sharp";
 import { battles } from "../src/domain/battles";
 
@@ -128,7 +124,12 @@ async function renderBattle(
   for (const radiusKm of RADII_KM) {
     const fillPng = await rasterize(renderFill(lat, lon, radiusKm));
     const fillFraction = await inkFraction(fillPng);
-    if (best == null || (best.mode === "fill" && fillFraction > best.fraction && best.fraction < MIN_LAND_FRACTION)) {
+    if (
+      best == null ||
+      (best.mode === "fill" &&
+        fillFraction > best.fraction &&
+        best.fraction < MIN_LAND_FRACTION)
+    ) {
       best = { png: fillPng, radiusKm, mode: "fill", fraction: fillFraction };
     }
     if (fillFraction < MIN_LAND_FRACTION) {
@@ -176,13 +177,19 @@ async function main() {
     const file = path.join(dir, "battle.png");
     fs.writeFileSync(file, result.png);
     totalBytes += result.png.length;
-    const note = `${battle.code}: ${result.mode} @ ${result.radiusKm}km, ink ${(result.fraction * 100).toFixed(2)}%, ${(result.png.length / 1024).toFixed(0)}KB`;
+    const note = `${battle.code}: ${result.mode} @ ${result.radiusKm}km, ink ${(
+      result.fraction * 100
+    ).toFixed(2)}%, ${(result.png.length / 1024).toFixed(0)}KB`;
     console.log(note);
     if (blank) {
       warnings.push(note);
     }
   }
-  console.log(`\nTotal: ${battles.length} images, ${(totalBytes / 1024 / 1024).toFixed(1)}MB`);
+  console.log(
+    `\nTotal: ${battles.length} images, ${(totalBytes / 1024 / 1024).toFixed(
+      1
+    )}MB`
+  );
   if (warnings.length > 0) {
     console.warn("\nWARNING: near-blank images (check manually):");
     for (const warning of warnings) {

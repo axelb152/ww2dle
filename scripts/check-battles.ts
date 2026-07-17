@@ -17,14 +17,13 @@ check(battles.length === 120, `expected 120 battles, got ${battles.length}`);
 const codes = battles.map((b) => b.code);
 check(
   new Set(codes).size === codes.length,
-  `duplicate codes: ${codes.filter((c, i) => codes.indexOf(c) !== i).join(", ")}`
+  `duplicate codes: ${codes
+    .filter((c, i) => codes.indexOf(c) !== i)
+    .join(", ")}`
 );
 
 for (const battle of battles) {
-  check(
-    /^[a-z0-9-]+$/.test(battle.code),
-    `invalid code slug: ${battle.code}`
-  );
+  check(/^[a-z0-9-]+$/.test(battle.code), `invalid code slug: ${battle.code}`);
   check(
     battle.year >= 1939 && battle.year <= 1945,
     `${battle.code}: year ${battle.year} out of 1939-1945`

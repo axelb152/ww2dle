@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { InfosFr } from "./components/panels/InfosFr";
 import { Settings } from "./components/panels/Settings";
 import { useSettings } from "./hooks/useSettings";
-import { Battldle } from "./components/Battldle";
+import { WW2dle } from "./components/WW2dle";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -65,7 +65,7 @@ function App() {
               ❔
             </button>
             <h1 className="text-4xl font-bold uppercase tracking-wide text-center my-1 flex-auto">
-              Batt<span className="text-red-600">l</span>dle
+              WW<span className="text-red-600">2</span>dle
             </h1>
             <button
               className="mx-3 text-xl"
@@ -77,7 +77,7 @@ function App() {
           </header>
           <Game settingsData={settingsData} />
           <footer className="flex justify-center text-sm mt-8 mb-1">
-            ❤️ <Battldle /> ? -
+            ❤️ <WW2dle /> ? -
             <a
               className="underline pl-1"
               href="https://worldle.teuteuf.fr/"

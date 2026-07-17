@@ -11,7 +11,7 @@ import { Guess } from "../domain/guess";
 import React from "react";
 import { SettingsData } from "../hooks/useSettings";
 
-const START_DATE = DateTime.fromISO("2023-10-10");
+const START_DATE = DateTime.fromISO("2026-08-01");
 
 interface ShareProps {
   guesses: Guess[];
@@ -44,7 +44,7 @@ export function Share({
       : rotationMode
       ? " 🌀"
       : "";
-    const title = `#Battldle #${dayCount} ${guessCount}/6${difficultyModifierEmoji}`;
+    const title = `#WW2dle #${dayCount} ${guessCount}/6${difficultyModifierEmoji}`;
 
     const guessString = guesses
       .map((guess) => {
@@ -53,7 +53,8 @@ export function Share({
       })
       .join("\n");
 
-    return [title, guessString, "https://www.battldle.today"].join("\n");
+    // TODO: real domain
+    return [title, guessString, "https://ww2dle.example.com"].join("\n");
   }, [dayString, guesses, hideImageMode, rotationMode, theme]);
 
   return (

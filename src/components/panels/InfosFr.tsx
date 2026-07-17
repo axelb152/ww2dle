@@ -1,7 +1,7 @@
 import { Guesses } from "../Guesses";
 import { Panel } from "./Panel";
 import React from "react";
-import { Battldle } from "../Battldle";
+import { WW2dle } from "../WW2dle";
 import { formatDistance } from "../../domain/geography";
 import { SettingsData } from "../../hooks/useSettings";
 
@@ -16,15 +16,16 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
     <Panel title="Comment jouer" isOpen={isOpen} close={close}>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
         <div>
-          Devinez le <Battldle /> en 6 essais.
+          Devinez la bataille <WW2dle /> en 6 essais.
         </div>
         <div>
-          Chaque essai est une bataille célèbre qui a eu lieu dans ce pays.
+          Chaque essai est une bataille ou une opération militaire de la Seconde
+          Guerre mondiale. La carte montre le littoral autour du lieu de la
+          bataille.
         </div>
         <div>
           Après chaque essai, vous obtiendrez la distance, la direction et la
-          proximité entre votre essai et la bataille cible, ainsi que le pays où
-          la bataille a eu lieu.
+          proximité entre votre essai et la bataille cible.
         </div>
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
@@ -34,19 +35,18 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             rowCount={1}
             guesses={[
               {
-                name: "Chacabuco, 1817",
-                direction: "NE",
-                distance: 13_557_000,
+                name: "Midway",
+                direction: "W",
+                distance: 9_700_000,
               },
             ]}
             settingsData={settingsData}
           />
           <div className="my-2">
-            Votre essai{" "}
-            <span className="uppercase font-bold">Chacabuco, 1817</span> est à{" "}
-            {formatDistance(13557000, settingsData.distanceUnit)} de la bataille
-            cible, la bataille cible est en direction nord-est et vous avez
-            seulement 32% de proximité car c&apos;est assez loin !
+            Votre essai <span className="uppercase font-bold">Midway</span> est
+            à {formatDistance(9700000, settingsData.distanceUnit)} de la
+            bataille cible, la bataille cible est en direction ouest et vous
+            avez seulement 52% de proximité car c&apos;est assez loin !
           </div>
         </div>
         <div>
@@ -54,18 +54,18 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             rowCount={1}
             guesses={[
               {
-                name: "Tali-Ihantala, 1944",
-                direction: "SE",
-                distance: 3_206_000,
+                name: "El Alamein",
+                direction: "NNE",
+                distance: 2_350_000,
               },
             ]}
             settingsData={settingsData}
           />
           <div className="my-2">
             Votre deuxième essai{" "}
-            <span className="uppercase font-bold">Tali-Ihantala, 1944</span> se
-            rapproche ! {formatDistance(3206000, settingsData.distanceUnit)} de
-            distance, direction sud-est et 84% !
+            <span className="uppercase font-bold">El Alamein</span> se rapproche
+            ! {formatDistance(2350000, settingsData.distanceUnit)} de distance,
+            direction nord-nord-est et 88% !
           </div>
         </div>
         <div>
@@ -73,7 +73,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             rowCount={1}
             guesses={[
               {
-                name: "Siège de Beyrouth, 1982",
+                name: "Koursk",
                 direction: "N",
                 distance: 0,
               },
@@ -82,13 +82,13 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
           />
           <div className="my-2">
             Le prochain essai,{" "}
-            <span className="uppercase font-bold">Siège de Beyrouth, 1982</span>
-            , c&apos;est la bataille correcte. Bien joué ⚔️
+            <span className="uppercase font-bold">Koursk</span>, c&apos;est la
+            bataille correcte. Bien joué ⚔️
           </div>
         </div>
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3 font-bold">
-        Un nouveau <Battldle /> sera disponible chaque jour !
+        Une nouvelle bataille <WW2dle /> sera disponible chaque jour !
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
         <div className="font-bold">À propos de la distance</div>
@@ -99,7 +99,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
         </div>
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
-        <Battldle /> a été <span className="font-bold">fortement</span> inspiré
+        <WW2dle /> a été <span className="font-bold">fortement</span> inspiré
         par{" "}
         <a
           className="underline"
@@ -132,17 +132,6 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             @axelb152
           </a>
         </div>
-        {/* <div>
-          Vous voulez soutenir ?{" "}
-          <a
-            className="underline"
-            href="https://www.ko-fi.com/teuteuf"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Achetez-moi un café ! ☕
-          </a>
-        </div> */}
       </div>
     </Panel>
   );

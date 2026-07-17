@@ -140,14 +140,13 @@ export function Game({ settingsData }: GameProps) {
             />
             <a
               className="underline w-full text-center block mt-4"
-              href={`https://www.google.com/search?q=${getBattleName(
-                i18n.resolvedLanguage,
-                battle
-              )}&hl=${i18n.resolvedLanguage}`}
+              href={`https://en.wikipedia.org/wiki/Special:Search?search=Battle+of+${encodeURIComponent(
+                getBattleName(i18n.resolvedLanguage, battle)
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t("showOnGoogle")}
+              {t("showOnWikipedia")}
             </a>
           </>
         ) : (
