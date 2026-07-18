@@ -729,8 +729,8 @@ export const battles: Battle[] = [
   },
   {
     code: "operation-torch",
-    latitude: 35.7,
-    longitude: -0.63,
+    latitude: 36.75,
+    longitude: 3.06,
     name: "Operation Torch",
     year: 1942,
     theater: "North Africa",
