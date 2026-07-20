@@ -27,6 +27,10 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
           Après chaque essai, vous obtiendrez la distance, la direction et la
           proximité entre votre essai et la bataille cible.
         </div>
+        <div>
+          Les noms des batailles sont indiqués en anglais (par exemple « Kursk »
+          et non « Koursk »).
+        </div>
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
         <div className="font-bold">Exemples</div>
@@ -73,7 +77,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             rowCount={1}
             guesses={[
               {
-                name: "Koursk",
+                name: "Kursk",
                 direction: "N",
                 distance: 0,
               },
@@ -82,7 +86,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
           />
           <div className="my-2">
             Le prochain essai,{" "}
-            <span className="uppercase font-bold">Koursk</span>, c&apos;est la
+            <span className="uppercase font-bold">Kursk</span>, c&apos;est la
             bataille correcte. Bien joué ⚔️
           </div>
         </div>

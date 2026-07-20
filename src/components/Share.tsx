@@ -53,8 +53,8 @@ export function Share({
       })
       .join("\n");
 
-    // TODO: real domain
-    return [title, guessString, "https://ww2dle.example.com"].join("\n");
+    // Swap for a custom domain if one is registered later.
+    return [title, guessString, "https://axelb152.github.io/ww2dle"].join("\n");
   }, [dayString, guesses, hideImageMode, rotationMode, theme]);
 
   return (
