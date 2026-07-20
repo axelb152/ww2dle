@@ -12,6 +12,7 @@ import { SettingsData } from "../hooks/useSettings";
 import { useMode } from "../hooks/useMode";
 import { useBattle } from "../hooks/useBattle";
 import { getHint } from "../domain/hints";
+import battlePhotos from "../domain/battlePhotos.json";
 
 function getDayString() {
   return DateTime.now().toFormat("yyyy-MM-dd");
@@ -108,7 +109,10 @@ export function Game({ settingsData }: GameProps) {
             hideImageMode && !gameEnded ? "h-0" : "h-full"
           }`}
           alt="battle to guess"
-          src={`images/battles/${battle.code.toLowerCase()}/battle.png`}
+          src={
+            (battlePhotos as Record<string, string>)[battle.code] ??
+            `images/battles/${battle.code.toLowerCase()}/battle.png`
+          }
           style={
             rotationMode && !gameEnded
               ? {

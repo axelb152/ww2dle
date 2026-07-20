@@ -20,12 +20,18 @@ import { battles } from "../src/domain/battles";
 const SIZE = 800;
 const COLOR = "#94a3b8";
 const EARTH_RADIUS_KM = 6371;
-const RADII_KM = [600, 900, 1350, 2000, 3000];
-// Land must cover at least this fraction of pixels to be considered visible,
-// and at most MAX_LAND_FRACTION before we switch to border/coastline lines.
-const MIN_LAND_FRACTION = 0.0005;
-const MAX_LAND_FRACTION = 0.995;
-const MIN_LINE_FRACTION = 0.001;
+// Candidate view radii, ordered by preference: the 600km default first, then
+// nearest alternatives (wider for open-ocean battles, tighter for lone
+// islands). First radius whose render passes the ink bounds wins.
+const RADII_KM = [600, 900, 300, 1350, 150, 2000, 3000, 75, 40, 20];
+// A fill render is acceptable when land covers MIN_LAND_FRACTION of pixels
+// (below that it reads as a blank square) and at most MAX_LAND_FRACTION
+// (above that it is a featureless solid square, so we switch to
+// border/coastline lines instead).
+// ponytail: thresholds tuned by probing all radii on the worst battles.
+const MIN_LAND_FRACTION = 0.02;
+const MAX_LAND_FRACTION = 0.9;
+const MIN_LINE_FRACTION = 0.02;
 
 const DATA_DIR = path.join(__dirname, "data");
 const OUT_DIR = path.join(__dirname, "..", "public", "images", "battles");
@@ -132,9 +138,6 @@ async function renderBattle(
     ) {
       best = { png: fillPng, radiusKm, mode: "fill", fraction: fillFraction };
     }
-    if (fillFraction < MIN_LAND_FRACTION) {
-      continue; // almost empty ocean: widen the box
-    }
     if (fillFraction > MAX_LAND_FRACTION) {
       // Landlocked and wall-to-wall land: coastline/borders as lines instead.
       const linesPng = await rasterize(renderLines(lat, lon, radiusKm));
@@ -150,14 +153,22 @@ async function renderBattle(
           blank: false,
         };
       }
-      continue; // no borders in the box either: widen
+      continue; // no borders in the box either: try the next radius
     }
-    return {
-      result: { png: fillPng, radiusKm, mode: "fill", fraction: fillFraction },
-      blank: false,
-    };
+    if (fillFraction >= MIN_LAND_FRACTION) {
+      return {
+        result: {
+          png: fillPng,
+          radiusKm,
+          mode: "fill",
+          fraction: fillFraction,
+        },
+        blank: false,
+      };
+    }
+    // Too little land: try the next radius.
   }
-  // Nothing meaningful even at max radius; keep the best attempt but flag it.
+  // Nothing meaningful at any radius; keep the best attempt but flag it.
   if (best == null) {
     throw new Error("no render produced");
   }
