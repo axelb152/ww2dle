@@ -1006,3 +1006,153 @@ export function sanitizeBattleName(battleName: string): string {
     .replace(/[- '()]/g, "")
     .toLowerCase();
 }
+
+// Present-day country/territory each battle site sits in (ISO 3166-1 alpha-2).
+// Naval battles use the nearest present-day coastal state/territory.
+// ponytail: separate keyed map instead of a field on every battle; the test
+// below enforces one entry per code so it can't silently drift.
+export const battleCountry: Record<string, string> = {
+  // Eastern Front
+  stalingrad: "RU",
+  kursk: "RU",
+  moscow: "RU",
+  leningrad: "RU",
+  "kiev-1941": "UA",
+  smolensk: "RU",
+  kharkov: "UA",
+  sevastopol: "UA",
+  "brest-fortress": "BY",
+  "minsk-1944": "BY",
+  rzhev: "RU",
+  demyansk: "RU",
+  kerch: "UA",
+  "korsun-pocket": "UA",
+  narva: "EE",
+  rostov: "RU",
+  debrecen: "HU",
+  budapest: "HU",
+  "vienna-offensive": "AT",
+  berlin: "DE",
+  "seelow-heights": "DE",
+  koenigsberg: "RU",
+  "warsaw-uprising": "PL",
+  lvov: "UA",
+  "jassy-kishinev": "MD",
+  odessa: "UA",
+  caucasus: "RU",
+  novorossiysk: "RU",
+  dnieper: "UA",
+  westerplatte: "PL",
+  bzura: "PL",
+  // Scandinavia
+  narvik: "NO",
+  "drobak-sound": "NO",
+  suomussalmi: "FI",
+  "tali-ihantala": "RU",
+  "petsamo-kirkenes": "RU",
+  // Pacific
+  "pearl-harbor": "US",
+  midway: "US",
+  "coral-sea": "AU",
+  guadalcanal: "SB",
+  "iwo-jima": "JP",
+  okinawa: "JP",
+  "leyte-gulf": "PH",
+  "philippine-sea": "PH",
+  tarawa: "KI",
+  peleliu: "PW",
+  saipan: "MP",
+  guam: "GU",
+  "wake-island": "US",
+  bataan: "PH",
+  manila: "PH",
+  "milne-bay": "PG",
+  "kokoda-track": "PG",
+  "buna-gona": "PG",
+  rabaul: "PG",
+  bougainville: "PG",
+  "bismarck-sea": "PG",
+  attu: "US",
+  darwin: "AU",
+  "java-sea": "ID",
+  eniwetok: "MH",
+  kwajalein: "MH",
+  // Western Europe
+  normandy: "FR",
+  dunkirk: "FR",
+  "battle-of-britain": "GB",
+  sedan: "FR",
+  "eben-emael": "BE",
+  dieppe: "FR",
+  "st-nazaire": "FR",
+  falaise: "FR",
+  arnhem: "NL",
+  "hurtgen-forest": "DE",
+  aachen: "DE",
+  bastogne: "BE",
+  remagen: "DE",
+  "operation-varsity": "DE",
+  "ruhr-pocket": "DE",
+  paris: "FR",
+  "operation-dragoon": "FR",
+  cherbourg: "FR",
+  scheldt: "NL",
+  metz: "FR",
+  // North Africa
+  "el-alamein": "EG",
+  tobruk: "LY",
+  gazala: "LY",
+  "sidi-barrani": "EG",
+  "beda-fomm": "LY",
+  "kasserine-pass": "TN",
+  "operation-torch": "DZ",
+  tunis: "TN",
+  "mareth-line": "TN",
+  "bir-hakeim": "LY",
+  // Mediterranean
+  taranto: "IT",
+  "cape-matapan": "GR",
+  crete: "GR",
+  malta: "MT",
+  sicily: "IT",
+  salerno: "IT",
+  anzio: "IT",
+  "monte-cassino": "IT",
+  "gothic-line": "IT",
+  greece: "GR",
+  "mers-el-kebir": "DZ",
+  // Asia
+  kohima: "IN",
+  imphal: "IN",
+  singapore: "SG",
+  "hong-kong": "HK",
+  "slim-river": "MY",
+  changsha: "CN",
+  hengyang: "CN",
+  "kunlun-pass": "CN",
+  yenangyaung: "MM",
+  meiktila: "MM",
+  "admin-box": "MM",
+  "khalkhin-gol": "MN",
+  // Atlantic
+  "river-plate": "UY",
+  "denmark-strait": "IS",
+  "north-cape": "NO",
+  "barents-sea": "NO",
+  "channel-dash": "FR",
+};
+
+// ISO alpha-2 -> flag emoji via regional-indicator symbols.
+export function countryFlag(code: string): string {
+  return code
+    .toUpperCase()
+    .replace(/./g, (c) => String.fromCodePoint(127397 + c.charCodeAt(0)));
+}
+
+// Flag for the battle matching a (possibly user-typed) name; "" if unknown.
+export function battleFlagForName(name: string): string {
+  const sanitized = sanitizeBattleName(name);
+  const battle = battles.find((b) => sanitizeBattleName(b.name) === sanitized);
+  const iso = battle && battleCountry[battle.code];
+  return iso ? countryFlag(iso) : "";
+}

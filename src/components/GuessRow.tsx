@@ -5,6 +5,7 @@ import {
   generateSquareCharacters,
 } from "../domain/geography";
 import { Guess } from "../domain/guess";
+import { battleFlagForName } from "../domain/battles";
 import React, { useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { SettingsData } from "../hooks/useSettings";
@@ -98,7 +99,8 @@ export function GuessRow({ guess, settingsData }: GuessRowProps) {
         <>
           <div className="flex items-center justify-center border-2 h-8 col-span-3 animate-reveal">
             <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-              {guess?.name.toUpperCase()}
+              {guess &&
+                `${battleFlagForName(guess.name)} ${guess.name.toUpperCase()}`}
             </p>
           </div>
           <div className="flex items-center justify-center border-2 h-8 col-span-2 animate-reveal">

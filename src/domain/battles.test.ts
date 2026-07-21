@@ -1,6 +1,11 @@
 import * as fs from "fs";
 import * as path from "path";
-import { battles, battleCodesWithImage } from "./battles";
+import {
+  battles,
+  battleCodesWithImage,
+  battleCountry,
+  countryFlag,
+} from "./battles";
 
 const THEATERS = [
   "Western Europe",
@@ -53,6 +58,16 @@ describe("battles dataset", () => {
 
   it("lists every code in battleCodesWithImage", () => {
     expect(battleCodesWithImage).toEqual(battles.map((battle) => battle.code));
+  });
+
+  it("has a present-day country (alpha-2) for every battle", () => {
+    for (const battle of battles) {
+      expect(battleCountry[battle.code]).toMatch(/^[A-Z]{2}$/);
+    }
+  });
+
+  it("renders a flag emoji from an alpha-2 code", () => {
+    expect(countryFlag("US")).toBe("🇺🇸");
   });
 
   it("has an image file on disk for every battle", () => {
