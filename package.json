@@ -2,6 +2,7 @@
   "name": "ww2dle",
   "version": "1.7",
   "private": true,
+  "homepage": "https://axelb152.github.io/ww2dle",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
