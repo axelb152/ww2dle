@@ -6,7 +6,10 @@ import { Infos } from "./components/panels/Infos";
 import { useTranslation } from "react-i18next";
 import { InfosFr } from "./components/panels/InfosFr";
 import { Settings } from "./components/panels/Settings";
+import { Leagues } from "./components/panels/Leagues";
 import { useSettings } from "./hooks/useSettings";
+import { useLeagues } from "./hooks/useLeagues";
+import { decodeLeague } from "./domain/leagues";
 import { WW2dle } from "./components/WW2dle";
 
 function App() {
@@ -14,8 +17,27 @@ function App() {
 
   const [infoOpen, setInfoOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [leaguesOpen, setLeaguesOpen] = useState(false);
 
   const [settingsData, updateSettings] = useSettings();
+  const { importLeague } = useLeagues();
+
+  // Import a shared league snapshot from a ?league=<code> link, then clean the URL.
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("league");
+    if (code == null) {
+      return;
+    }
+    const league = decodeLeague(code);
+    if (
+      league != null &&
+      window.confirm(t("leagues.importPrompt", { name: league.name }))
+    ) {
+      importLeague(league);
+      setLeaguesOpen(true);
+    }
+    window.history.replaceState(null, "", window.location.pathname);
+  }, [t, importLeague]);
 
   useEffect(() => {
     if (settingsData.theme === "dark") {
@@ -54,6 +76,7 @@ function App() {
         settingsData={settingsData}
         updateSettings={updateSettings}
       />
+      <Leagues isOpen={leaguesOpen} close={() => setLeaguesOpen(false)} />
       <div className="flex justify-center flex-auto dark:bg-slate-900 dark:text-slate-50">
         <div className="w-full max-w-lg flex flex-col">
           <header className="border-b-2 border-gray-200 flex">
@@ -67,6 +90,14 @@ function App() {
             <h1 className="text-4xl font-bold uppercase tracking-wide text-center my-1 flex-auto">
               WW<span className="text-red-600">2</span>dle
             </h1>
+            <button
+              className="ml-3 text-xl"
+              type="button"
+              title={t("leagues.title")}
+              onClick={() => setLeaguesOpen(true)}
+            >
+              🏆
+            </button>
             <button
               className="mx-3 text-xl"
               type="button"
