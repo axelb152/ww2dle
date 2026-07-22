@@ -2,7 +2,12 @@ import { t } from "i18next";
 import React, { useState } from "react";
 import Autosuggest from "react-autosuggest";
 import { useTranslation } from "react-i18next";
-import { battles, getBattleName, sanitizeBattleName } from "../domain/battles";
+import {
+  battleFlagForName,
+  battles,
+  getBattleName,
+  sanitizeBattleName,
+} from "../domain/battles";
 
 interface BattleInputProps {
   currentGuess: string;
@@ -30,10 +35,11 @@ export function BattleInput({
         )
       }
       onSuggestionsClearRequested={() => setSuggestions([])}
+      shouldRenderSuggestions={() => true}
       getSuggestionValue={(suggestion) => suggestion}
       renderSuggestion={(suggestion) => (
         <div className="border-2 dark:bg-slate-800 dark:text-slate-100">
-          {suggestion}
+          {`${battleFlagForName(suggestion)} ${suggestion}`}
         </div>
       )}
       containerProps={{
