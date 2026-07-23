@@ -74,10 +74,15 @@ functions to `anon`.
 - `src/lib/supabase.ts` — creates the client from `REACT_APP_SUPABASE_URL` and
   `REACT_APP_SUPABASE_ANON_KEY`. Exports `isConfigured` so the UI degrades
   gracefully when env is missing (local dev without creds, tests).
-- `src/domain/leagues.ts` — keep `scoreOf`; refactor `standings` to take a flat
+- `src/domain/leagues.ts` — keep `scoreOf` and the monthly/medal/per-player
+  stats from the parity pass; refactor `standings`/`monthsOf` to take a flat
   `Result[]` (`{day, player, guesses}`) instead of the old nested map. Drop
-  `parseShareResult`, `encodeLeague`, `decodeLeague` (no more paste/link).
-- `src/hooks/useLeagues.ts` — localStorage now stores only membership:
+  `parseShareResult`, `encodeLeague`, `decodeLeague` (no more paste/link) and
+  `MAX_MEMBERS`/member removal (no server-side member list).
+- `src/hooks/useLeagues.tsx` — one `LeaguesProvider` at the App root holds the
+  state; `useLeagues()` reads it from context, so App (join link), Game
+  (auto-submit) and the panel share one membership list instead of each
+  loading their own stale copy. localStorage stores only membership:
   `{ myName: string, joined: {id, name}[] }`. Async actions wrap the RPCs:
   `createLeague(name)`, `joinLeague(id)`, `leaveLeague(id)` (local only),
   `loadLeague(id)` (returns results for standings), `submitResult(id, day,
