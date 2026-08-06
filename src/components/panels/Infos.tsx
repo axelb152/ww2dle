@@ -2,7 +2,10 @@ import { Guesses } from "../Guesses";
 import { Panel } from "./Panel";
 import React from "react";
 import { WW2dle } from "../WW2dle";
-import { formatDistance } from "../../domain/geography";
+import {
+  computeProximityPercent,
+  formatDistance,
+} from "../../domain/geography";
 import { SettingsData } from "../../hooks/useSettings";
 
 interface InfosProps {
@@ -45,7 +48,8 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             Your guess <span className="uppercase font-bold">Midway</span> is{" "}
             {formatDistance(9700000, settingsData.distanceUnit)} away from the
             target battle, the target battle is in the West direction and you
-            have only 52% of proximity because it&apos;s quite far away!
+            have only {computeProximityPercent(9_700_000)}% of proximity because
+            it&apos;s quite far away!
           </div>
         </div>
         <div>
@@ -64,7 +68,8 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             Your second guess{" "}
             <span className="uppercase font-bold">El Alamein</span> is getting
             closer! {formatDistance(2350000, settingsData.distanceUnit)} away,
-            North-North-East direction and 88%!
+            North-North-East direction and {computeProximityPercent(2_350_000)}
+            %!
           </div>
         </div>
         <div>

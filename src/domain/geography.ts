@@ -19,8 +19,18 @@ export type Direction =
   | "N";
 
 export function computeProximityPercent(distance: number): number {
-  const proximity = Math.max(MAX_DISTANCE_ON_EARTH - distance, 0);
-  return Math.round((proximity / MAX_DISTANCE_ON_EARTH) * 100);
+  if (distance <= 0) {
+    return 100;
+  }
+
+  // ponytail: sqrt curve instead of linear. Battles cluster by theatre, so on a
+  // linear half-Earth scale every in-theatre guess read 90-100%.
+  const ratio =
+    Math.min(distance, MAX_DISTANCE_ON_EARTH) / MAX_DISTANCE_ON_EARTH;
+  const percent = Math.round((1 - Math.sqrt(ratio)) * 100);
+
+  // 100% is reserved for the correct battle.
+  return Math.min(percent, 99);
 }
 
 export function generateSquareCharacters(
