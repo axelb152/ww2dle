@@ -1,3 +1,17 @@
+import { DateTime } from "luxon";
+
+const START_DATE = DateTime.fromISO("2026-08-01");
+
+// The ww2dle day number for a "yyyy-MM-dd" day string. Clamped at 0: playing
+// before START_DATE used to make an invalid Interval, whose length is NaN, and
+// "#WW2dle #NaN" leaked into shared results.
+export function dayNumber(dayString: string): number {
+  return Math.max(
+    0,
+    Math.floor(DateTime.fromISO(dayString).diff(START_DATE, "day").days)
+  );
+}
+
 export interface League {
   id: string;
   name: string;

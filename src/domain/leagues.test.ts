@@ -1,4 +1,5 @@
 import {
+  dayNumber,
   decodeLeague,
   encodeLeague,
   League,
@@ -86,5 +87,23 @@ describe("standings", () => {
       member: "Bob",
       today: null,
     });
+  });
+});
+
+describe("dayNumber", () => {
+  it("counts days from launch", () => {
+    expect(dayNumber("2026-08-01")).toEqual(0);
+    expect(dayNumber("2026-08-06")).toEqual(5);
+  });
+
+  it("clamps pre-launch days to 0 instead of NaN", () => {
+    // Regression: an invalid Interval gave NaN, shipping "#WW2dle #NaN 6/6".
+    expect(dayNumber("2026-07-31")).toEqual(0);
+    expect(dayNumber("2020-01-01")).toEqual(0);
+  });
+
+  it("produces a day number that parseShareResult can read back", () => {
+    const text = `#WW2dle #${dayNumber("2026-07-31")} 6/6`;
+    expect(parseShareResult(text)).toEqual({ day: 0, guessCount: 6 });
   });
 });

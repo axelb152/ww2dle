@@ -1,4 +1,3 @@
-import { DateTime, Interval } from "luxon";
 import { useMemo } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
@@ -8,10 +7,9 @@ import {
   generateSquareCharacters,
 } from "../domain/geography";
 import { Guess } from "../domain/guess";
+import { dayNumber } from "../domain/leagues";
 import React from "react";
 import { SettingsData } from "../hooks/useSettings";
-
-const START_DATE = DateTime.fromISO("2026-08-01");
 
 interface ShareProps {
   guesses: Guess[];
@@ -34,11 +32,7 @@ export function Share({
   const shareText = useMemo(() => {
     const guessCount =
       guesses[guesses.length - 1]?.distance === 0 ? guesses.length : "X";
-    const dayCount = Math.floor(
-      Interval.fromDateTimes(START_DATE, DateTime.fromISO(dayString)).length(
-        "day"
-      )
-    );
+    const dayCount = dayNumber(dayString);
     const difficultyModifierEmoji = hideImageMode
       ? " 🙈"
       : rotationMode

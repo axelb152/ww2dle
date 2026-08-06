@@ -1,8 +1,9 @@
-import { DateTime, Interval } from "luxon";
+import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import {
+  dayNumber,
   encodeLeague,
   parseShareResult,
   standings,
@@ -10,8 +11,6 @@ import {
 import { Guess } from "../../domain/guess";
 import { useLeagues } from "../../hooks/useLeagues";
 import { Panel } from "./Panel";
-
-const START_DATE = DateTime.fromISO("2026-08-01");
 
 // Today's own result, read straight from the game's localStorage — no prop
 // threading needed. Returns null if the player hasn't guessed today.
@@ -25,12 +24,10 @@ function todayOwnResult(): { day: number; guessCount: number } | null {
     return null;
   }
   const solved = guesses[guesses.length - 1]?.distance === 0;
-  const day = Math.floor(
-    Interval.fromDateTimes(START_DATE, DateTime.fromISO(dayString)).length(
-      "day"
-    )
-  );
-  return { day, guessCount: solved ? guesses.length : 0 };
+  return {
+    day: dayNumber(dayString),
+    guessCount: solved ? guesses.length : 0,
+  };
 }
 
 interface LeaguesProps {
