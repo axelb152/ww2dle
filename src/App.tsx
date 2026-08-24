@@ -20,7 +20,9 @@ function App() {
   const [leaguesOpen, setLeaguesOpen] = useState(false);
 
   const [settingsData, updateSettings] = useSettings();
-  const { importLeague } = useLeagues();
+  // One shared instance: the ?league= import below has to be visible to the panel.
+  const leaguesState = useLeagues();
+  const { importLeague } = leaguesState;
 
   // Import a shared league snapshot from a ?league=<code> link, then clean the URL.
   useEffect(() => {
@@ -76,7 +78,11 @@ function App() {
         settingsData={settingsData}
         updateSettings={updateSettings}
       />
-      <Leagues isOpen={leaguesOpen} close={() => setLeaguesOpen(false)} />
+      <Leagues
+        isOpen={leaguesOpen}
+        close={() => setLeaguesOpen(false)}
+        {...leaguesState}
+      />
       <div className="flex justify-center flex-auto dark:bg-slate-900 dark:text-slate-50">
         <div className="w-full max-w-lg flex flex-col">
           <header className="border-b-2 border-gray-200 flex">
