@@ -12,9 +12,13 @@ export function dayNumber(dayString: string): number {
   );
 }
 
+// Worldle caps a league at 25; same cap keeps standings readable on a phone.
+export const MAX_MEMBERS = 25;
+
 export interface League {
   id: string;
   name: string;
+  emoji?: string;
   members: string[];
   // keyed by ww2dle day number; value = guessCount 1..6, 0 = failed (X/6)
   results: Record<number, Record<string, number>>;
@@ -69,28 +73,110 @@ export interface Standing {
   member: string;
   total: number;
   daysPlayed: number;
+  wins: number;
+  avgGuesses: number | null; // over solves only; null if never solved
+  streak: number;
+  places: number[]; // daily podium places (1..3), most recent day first
   today: number | null;
 }
 
-export function standings(league: League, today?: number): Standing[] {
+// "2026-08" for the month the given day number falls in.
+export function monthOf(day: number): string {
+  return START_DATE.plus({ days: day }).toFormat("yyyy-MM");
+}
+
+// Months with recorded results, newest first, always including the current one.
+export function monthsOf(league: League): string[] {
+  const current = DateTime.now().toFormat("yyyy-MM");
+  const months = new Set([current]);
+  for (const day of Object.keys(league.results)) {
+    months.add(monthOf(Number(day)));
+  }
+  return Array.from(months).sort().reverse();
+}
+
+function scopedDays(league: League, month?: string): number[] {
+  return Object.keys(league.results)
+    .map(Number)
+    .filter((day) => month == null || monthOf(day) === month)
+    .sort((a, b) => a - b);
+}
+
+// Podium place (1..3) per member for one day; equal scores share a place.
+function placesOn(league: League, day: number): Record<string, number> {
+  const scores = Object.entries(league.results[day] ?? {}).map(
+    ([member, guessCount]) => [member, scoreOf(guessCount)] as const
+  );
+  const distinct = Array.from(new Set(scores.map(([, score]) => score))).sort(
+    (a, b) => b - a
+  );
+  const places: Record<string, number> = {};
+  for (const [member, score] of scores) {
+    const place = distinct.indexOf(score) + 1;
+    if (place <= 3) {
+      places[member] = place;
+    }
+  }
+  return places;
+}
+
+export function standings(
+  league: League,
+  { month, today }: { month?: string; today?: number } = {}
+): Standing[] {
+  const days = scopedDays(league, month);
+  const places = new Map(days.map((day) => [day, placesOn(league, day)]));
+
   return league.members
     .map((member) => {
       let total = 0;
       let daysPlayed = 0;
+      let wins = 0;
+      let guessSum = 0;
       let todayScore: number | null = null;
-      for (const [day, byMember] of Object.entries(league.results)) {
-        const guessCount = byMember[member];
+      const memberPlaces: number[] = [];
+
+      for (const day of days) {
+        const guessCount = league.results[day][member];
         if (guessCount === undefined) {
           continue;
         }
-        const score = scoreOf(guessCount);
-        total += score;
+        total += scoreOf(guessCount);
         daysPlayed += 1;
-        if (today !== undefined && Number(day) === today) {
-          todayScore = score;
+        if (guessCount > 0) {
+          wins += 1;
+          guessSum += guessCount;
+        }
+        const place = places.get(day)?.[member];
+        if (place !== undefined) {
+          memberPlaces.unshift(place);
+        }
+        if (day === today) {
+          todayScore = scoreOf(guessCount);
         }
       }
-      return { member, total, daysPlayed, today: todayScore };
+
+      // Consecutive recorded days solved, counting back from the league's
+      // latest recorded day — a member who stops playing loses their streak.
+      let streak = 0;
+      for (const day of [...days].reverse()) {
+        if ((league.results[day][member] ?? 0) > 0) {
+          streak += 1;
+        } else {
+          break;
+        }
+      }
+
+      return {
+        member,
+        total,
+        daysPlayed,
+        wins,
+        avgGuesses: wins === 0 ? null : guessSum / wins,
+        streak,
+        places: memberPlaces,
+        today: todayScore,
+      };
     })
     .sort((a, b) => b.total - a.total || a.member.localeCompare(b.member));
 }

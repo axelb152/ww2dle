@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { League } from "../domain/leagues";
+import { League, MAX_MEMBERS } from "../domain/leagues";
 
 function loadLeagues(): League[] {
   const stored = localStorage.getItem("leagues");
@@ -26,8 +26,14 @@ export function useLeagues() {
   );
 
   const createLeague = useCallback(
-    (name: string): League => {
-      const league: League = { id: newId(), name, members: [], results: {} };
+    (name: string, emoji?: string): League => {
+      const league: League = {
+        id: newId(),
+        name,
+        emoji,
+        members: [],
+        results: {},
+      };
       persist([...leagues, league]);
       return league;
     },
@@ -42,7 +48,7 @@ export function useLeagues() {
   const addMember = useCallback(
     (id: string, member: string) =>
       update(id, (l) =>
-        l.members.includes(member)
+        l.members.includes(member) || l.members.length >= MAX_MEMBERS
           ? l
           : { ...l, members: [...l.members, member] }
       ),
@@ -68,16 +74,20 @@ export function useLeagues() {
 
   const recordResult = useCallback(
     (id: string, member: string, day: number, guessCount: number) =>
-      update(id, (l) => ({
-        ...l,
-        members: l.members.includes(member)
-          ? l.members
-          : [...l.members, member],
-        results: {
-          ...l.results,
-          [day]: { ...l.results[day], [member]: guessCount },
-        },
-      })),
+      update(id, (l) => {
+        const known = l.members.includes(member);
+        if (!known && l.members.length >= MAX_MEMBERS) {
+          return l;
+        }
+        return {
+          ...l,
+          members: known ? l.members : [...l.members, member],
+          results: {
+            ...l.results,
+            [day]: { ...l.results[day], [member]: guessCount },
+          },
+        };
+      }),
     [update]
   );
 
@@ -98,3 +108,5 @@ export function useLeagues() {
     importLeague,
   };
 }
+
+export type UseLeagues = ReturnType<typeof useLeagues>;

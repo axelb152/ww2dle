@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import {
   dayNumber,
   decodeLeague,
@@ -6,6 +7,8 @@ import {
   parseShareResult,
   scoreOf,
   standings,
+  monthOf,
+  monthsOf,
 } from "./leagues";
 
 describe("parseShareResult", () => {
@@ -75,18 +78,110 @@ describe("standings", () => {
   };
 
   it("totals scores and sorts by total desc", () => {
-    expect(standings(league)).toEqual([
-      { member: "Ada", total: 13, daysPlayed: 2, today: null },
-      { member: "Bob", total: 3, daysPlayed: 1, today: null },
+    expect(standings(league)).toMatchObject([
+      { member: "Ada", total: 13, daysPlayed: 2 },
+      { member: "Bob", total: 3, daysPlayed: 1 },
     ]);
   });
 
   it("reports today's score when the day is given", () => {
-    expect(standings(league, 2)[0]).toMatchObject({ member: "Ada", today: 5 });
-    expect(standings(league, 2)[1]).toMatchObject({
+    expect(standings(league, { today: 2 })[0]).toMatchObject({
+      member: "Ada",
+      today: 5,
+    });
+    expect(standings(league, { today: 2 })[1]).toMatchObject({
       member: "Bob",
       today: null,
     });
+  });
+
+  it("counts wins, average guesses and streaks", () => {
+    const l: League = {
+      id: "b",
+      name: "T",
+      members: ["Ada"],
+      results: { 1: { Ada: 2 }, 2: { Ada: 0 }, 3: { Ada: 4 }, 4: { Ada: 2 } },
+    };
+    expect(standings(l)[0]).toMatchObject({
+      daysPlayed: 4,
+      wins: 3,
+      avgGuesses: (2 + 4 + 2) / 3,
+      streak: 2, // days 3 and 4; day 2 was a fail
+    });
+  });
+
+  it("has no average and no streak for a member who never solved", () => {
+    const l: League = {
+      id: "c",
+      name: "T",
+      members: ["Bob"],
+      results: { 1: { Bob: 0 } },
+    };
+    expect(standings(l)[0]).toMatchObject({ avgGuesses: null, streak: 0 });
+  });
+
+  it("awards daily places, sharing a place on a tie", () => {
+    const l: League = {
+      id: "d",
+      name: "T",
+      members: ["Ada", "Bob", "Cy", "Di"],
+      results: { 1: { Ada: 1, Bob: 1, Cy: 3, Di: 6 } },
+    };
+    const byMember = Object.fromEntries(
+      standings(l).map((s) => [s.member, s.places])
+    );
+    expect(byMember).toEqual({ Ada: [1], Bob: [1], Cy: [2], Di: [3] });
+  });
+
+  it("keeps places newest-day-first", () => {
+    const l: League = {
+      id: "e",
+      name: "T",
+      members: ["Ada", "Bob"],
+      results: { 1: { Ada: 6, Bob: 1 }, 2: { Ada: 1, Bob: 6 } },
+    };
+    expect(standings(l)[0].places).toEqual([1, 2]); // day 2 first
+  });
+
+  it("scopes totals to one month", () => {
+    const l: League = {
+      id: "f",
+      name: "T",
+      members: ["Ada"],
+      // day 0 = 2026-08-01, day 40 = 2026-09-10
+      results: { 0: { Ada: 1 }, 40: { Ada: 2 } },
+    };
+    expect(standings(l, { month: "2026-08" })[0]).toMatchObject({
+      total: 8,
+      daysPlayed: 1,
+    });
+    expect(standings(l, { month: "2026-09" })[0]).toMatchObject({
+      total: 7,
+      daysPlayed: 1,
+    });
+  });
+});
+
+describe("months", () => {
+  it("maps day numbers to their month", () => {
+    expect(monthOf(0)).toBe("2026-08");
+    expect(monthOf(30)).toBe("2026-08");
+    expect(monthOf(31)).toBe("2026-09");
+  });
+
+  it("lists recorded months newest first, incl. the current one", () => {
+    const now = DateTime.now().toFormat("yyyy-MM");
+    const l: League = {
+      id: "g",
+      name: "T",
+      members: [],
+      results: { 0: {}, 40: {} },
+    };
+    expect(monthsOf(l)).toEqual(
+      Array.from(new Set([now, "2026-09", "2026-08"]))
+        .sort()
+        .reverse()
+    );
   });
 });
 

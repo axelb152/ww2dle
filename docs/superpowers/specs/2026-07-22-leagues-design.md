@@ -95,3 +95,36 @@ overwrites (idempotent).
 `leagues.test.ts` (Jest, already configured via react-scripts): parsing valid /
 invalid share text, the scoring table incl. fail = 3, and record dedupe/
 overwrite. Matches existing `hints.test.ts` / `battles.test.ts`.
+
+## Update 2026-08-24 — Worldle parity pass
+
+Shipped on top of the above; the scoring rule and storage shape are unchanged,
+so no migration. See also
+[2026-08-24-leagues-backend.md](./2026-08-24-leagues-backend.md) for what still
+needs a server.
+
+- **Monthly scope.** `monthOf(day)` maps a ww2dle day number to `"yyyy-MM"`;
+  `monthsOf(league)` lists recorded months newest-first including the current
+  one. `standings(league, { month?, today? })` replaced
+  `standings(league, today?)`. The panel defaults to the current month, like
+  Worldle; all-time is a `<select>` option.
+- **Daily medals.** `Standing.places` holds that member's podium places (1..3)
+  within the scoped days, newest day first. Equal scores share a place. The UI
+  shows up to 5 medals plus an ellipsis.
+- **Per-member stats.** `wins`, `daysPlayed`, `avgGuesses` (solves only) and
+  `streak` — consecutive recorded days solved, counting back from the *league's*
+  latest recorded day, so a member who stops playing loses their streak. Shown
+  as WIN / GAMES / STREAK / AVG tiles; the standings table became member cards
+  because four stats per member does not fit a phone-width table.
+- **Today's delta.** `today` is keyed off the calendar day, not off whether the
+  viewer has played.
+- **`League.emoji`** (optional) and `MAX_MEMBERS = 25`, enforced in
+  `useLeagues` and surfaced as `n/25 members`.
+
+Two bugs fixed in the same pass, both with regression tests in `App.test.tsx`:
+
+- `useLeagues` was instantiated twice (App and the panel), so a league imported
+  from a `?league=` link was invisible until a reload. The hook now lives in
+  `App.tsx` and is passed down.
+- "Add my result" recorded a half-played day as a loss. `todayOwnResult()`
+  returns null until the game is solved or out of tries.

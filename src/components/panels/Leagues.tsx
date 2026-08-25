@@ -5,51 +5,163 @@ import { toast } from "react-toastify";
 import {
   dayNumber,
   encodeLeague,
+  League,
+  MAX_MEMBERS,
+  monthsOf,
   parseShareResult,
+  Standing,
   standings,
 } from "../../domain/leagues";
 import { Guess } from "../../domain/guess";
-import { useLeagues } from "../../hooks/useLeagues";
+import { UseLeagues } from "../../hooks/useLeagues";
 import { Panel } from "./Panel";
 
+const MAX_TRY_COUNT = 6;
+
 // Today's own result, read straight from the game's localStorage — no prop
-// threading needed. Returns null if the player hasn't guessed today.
+// threading needed. Null unless today's game is actually over: a half-played
+// day used to be recorded as a loss.
 function todayOwnResult(): { day: number; guessCount: number } | null {
   const dayString = DateTime.now().toFormat("yyyy-MM-dd");
   const all: Record<string, Guess[]> = JSON.parse(
     localStorage.getItem("guesses") ?? "{}"
   );
   const guesses = all[dayString] ?? [];
-  if (guesses.length === 0) {
+  const solved = guesses[guesses.length - 1]?.distance === 0;
+  if (!solved && guesses.length < MAX_TRY_COUNT) {
     return null;
   }
-  const solved = guesses[guesses.length - 1]?.distance === 0;
   return {
     day: dayNumber(dayString),
     guessCount: solved ? guesses.length : 0,
   };
 }
 
-interface LeaguesProps {
+const RANK_MEDALS = ["🥇", "🥈", "🥉"];
+
+function todayNumber(): number {
+  return dayNumber(DateTime.now().toFormat("yyyy-MM-dd"));
+}
+
+function Places({ places }: { places: number[] }) {
+  const shown = places.slice(0, 5);
+  return (
+    <span className="whitespace-nowrap">
+      {shown.map((place, i) => (
+        <span key={i}>{RANK_MEDALS[place - 1]}</span>
+      ))}
+      {places.length > shown.length && (
+        <span className="opacity-60" title={`${places.length}`}>
+          …
+        </span>
+      )}
+    </span>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-2 px-1 py-1 text-center">
+      <div className="text-[10px] uppercase opacity-60">{label}</div>
+      <div className="font-bold">{value}</div>
+    </div>
+  );
+}
+
+function MemberCard({
+  standing,
+  rank,
+  onRemove,
+}: {
+  standing: Standing;
+  rank: number;
+  onRemove: () => void;
+}) {
+  const { t } = useTranslation();
+  const { member, total, daysPlayed, wins, avgGuesses, streak, today, places } =
+    standing;
+
+  return (
+    <li className="border-2 p-2">
+      <div className="flex items-baseline gap-2">
+        <span className="w-10 shrink-0">
+          {RANK_MEDALS[rank - 1] ?? ""}#{rank}
+        </span>
+        <span className="font-bold truncate">{member}</span>
+        <Places places={places} />
+        <span className="ml-auto text-right shrink-0">
+          {today != null && (
+            <span className="text-green-600 text-xs mr-1">+{today}</span>
+          )}
+          <span className="text-xl font-bold">{total}</span>
+          <span className="text-[10px] uppercase opacity-60">
+            {" "}
+            {t("leagues.pts")}
+          </span>
+        </span>
+        <button
+          type="button"
+          className="shrink-0"
+          title={t("leagues.removeMember")}
+          onClick={onRemove}
+        >
+          ✖️
+        </button>
+      </div>
+      <div className="grid grid-cols-4 gap-1 mt-2">
+        <Stat
+          label={t("leagues.win")}
+          value={
+            daysPlayed === 0 ? "–" : `${Math.round((100 * wins) / daysPlayed)}%`
+          }
+        />
+        <Stat label={t("leagues.games")} value={String(daysPlayed)} />
+        <Stat label={t("leagues.streak")} value={String(streak)} />
+        <Stat
+          label={t("leagues.avg")}
+          value={avgGuesses == null ? "–" : avgGuesses.toFixed(1)}
+        />
+      </div>
+    </li>
+  );
+}
+
+interface LeaguesProps extends UseLeagues {
   isOpen: boolean;
   close: () => void;
 }
 
-export function Leagues({ isOpen, close }: LeaguesProps) {
+export function Leagues({
+  isOpen,
+  close,
+  leagues,
+  createLeague,
+  deleteLeague,
+  removeMember,
+  recordResult,
+}: LeaguesProps) {
   const { t } = useTranslation();
-  const { leagues, createLeague, deleteLeague, removeMember, recordResult } =
-    useLeagues();
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
+  const [newEmoji, setNewEmoji] = useState("");
   const [member, setMember] = useState("");
   const [shareText, setShareText] = useState("");
+  // Worldle-style: the current month is the default view, all-time is opt-in.
+  const [month, setMonth] = useState<string | null>(
+    DateTime.now().toFormat("yyyy-MM")
+  );
 
   const league = leagues.find((l) => l.id === openId) ?? null;
   const today = todayOwnResult();
+  const isFull = (l: League) => l.members.length >= MAX_MEMBERS;
 
   const handleAdd = () => {
     if (league == null || member.trim() === "") {
+      return;
+    }
+    if (isFull(league) && !league.members.includes(member.trim())) {
+      toast(t("leagues.full", { max: MAX_MEMBERS }));
       return;
     }
     const parsed = shareText.trim()
@@ -87,9 +199,9 @@ export function Leagues({ isOpen, close }: LeaguesProps) {
                   className="flex-auto text-left border-2 px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800"
                   onClick={() => setOpenId(l.id)}
                 >
-                  🏆 {l.name}{" "}
+                  {l.emoji || "🏆"} {l.name}{" "}
                   <span className="opacity-60">
-                    ({l.members.length} {t("leagues.members")})
+                    ({l.members.length}/{MAX_MEMBERS} {t("leagues.members")})
                   </span>
                 </button>
                 <button
@@ -119,11 +231,22 @@ export function Leagues({ isOpen, close }: LeaguesProps) {
             onSubmit={(e) => {
               e.preventDefault();
               if (newName.trim()) {
-                setOpenId(createLeague(newName.trim()).id);
+                setOpenId(
+                  createLeague(newName.trim(), newEmoji.trim() || undefined).id
+                );
                 setNewName("");
+                setNewEmoji("");
               }
             }}
           >
+            <input
+              className="w-10 border-2 px-1 py-1 text-center dark:bg-slate-800"
+              maxLength={2}
+              placeholder="🏆"
+              title={t("leagues.emoji")}
+              value={newEmoji}
+              onChange={(e) => setNewEmoji(e.target.value)}
+            />
             <input
               className="flex-auto border-2 px-2 py-1 dark:bg-slate-800"
               placeholder={t("leagues.namePlaceholder")}
@@ -147,55 +270,54 @@ export function Leagues({ isOpen, close }: LeaguesProps) {
           >
             ← {t("leagues.back")}
           </button>
-          <h3 className="text-xl font-bold">{league.name}</h3>
-
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b-2">
-                <th className="py-1">#</th>
-                <th>{t("leagues.member")}</th>
-                <th className="text-right">{t("leagues.played")}</th>
-                <th className="text-right">{t("leagues.today")}</th>
-                <th className="text-right">{t("leagues.total")}</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {standings(league, today?.day).map((s, i) => (
-                <tr key={s.member} className="border-b">
-                  <td className="py-1">{i + 1}</td>
-                  <td>{s.member}</td>
-                  <td className="text-right">{s.daysPlayed}</td>
-                  <td className="text-right">{s.today ?? "–"}</td>
-                  <td className="text-right font-bold">{s.total}</td>
-                  <td className="text-right">
-                    <button
-                      type="button"
-                      title={t("leagues.removeMember")}
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            t("leagues.confirmRemoveMember", { name: s.member })
-                          )
-                        ) {
-                          removeMember(league.id, s.member);
-                        }
-                      }}
-                    >
-                      ✖️
-                    </button>
-                  </td>
-                </tr>
+          <div className="flex items-center gap-2">
+            <h3 className="text-xl font-bold flex-auto truncate">
+              {league.emoji || "🏆"} {league.name}
+            </h3>
+            <select
+              className="border-2 px-1 py-1 dark:bg-slate-800"
+              title={t("leagues.month")}
+              value={month ?? ""}
+              onChange={(e) => setMonth(e.target.value || null)}
+            >
+              <option value="">{t("leagues.allTime")}</option>
+              {monthsOf(league).map((m) => (
+                <option key={m} value={m}>
+                  {DateTime.fromISO(`${m}-01`).toFormat("LLL yyyy")}
+                </option>
               ))}
-              {league.members.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="py-2 opacity-60">
-                    {t("leagues.noMembers")}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+            </select>
+          </div>
+          <p className="text-xs opacity-60">
+            {league.members.length}/{MAX_MEMBERS} {t("leagues.members")}
+          </p>
+
+          <ul className="space-y-2">
+            {standings(league, {
+              month: month ?? undefined,
+              today: todayNumber(),
+            }).map((standing, i) => (
+              <MemberCard
+                key={standing.member}
+                standing={standing}
+                rank={i + 1}
+                onRemove={() => {
+                  if (
+                    window.confirm(
+                      t("leagues.confirmRemoveMember", {
+                        name: standing.member,
+                      })
+                    )
+                  ) {
+                    removeMember(league.id, standing.member);
+                  }
+                }}
+              />
+            ))}
+            {league.members.length === 0 && (
+              <li className="opacity-60">{t("leagues.noMembers")}</li>
+            )}
+          </ul>
 
           <div className="space-y-2 border-t-2 pt-3">
             <h4 className="font-bold">{t("leagues.addResult")}</h4>
