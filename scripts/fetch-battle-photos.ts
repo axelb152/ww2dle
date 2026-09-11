@@ -42,6 +42,8 @@ const FILE_OVERRIDES: Record<string, string> = {
   "tali-ihantala": "Tali-Ihantala.jpg",
   "channel-dash":
     'Bundesarchiv_DVM_10_Bild-23-63-46,_Schlachtschiff_"Scharnhorst".jpg',
+  "st-nazaire":
+    "Bundesarchiv_Bild_101II-MW-3722-03,_St._Nazaire,_Zerstörer_'HMS_Campbeltown'.jpg",
 };
 // No usable wartime photo on Commons: these keep the map silhouette.
 const NO_PHOTO = new Set(["novorossiysk"]);
