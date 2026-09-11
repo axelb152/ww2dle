@@ -37,7 +37,9 @@ test("league flow: create, paste a result, see standings", async () => {
 
   const card = screen.getByText("Ada").closest("li");
   // Solve in 2 guesses => 7 points, 1 game, 100% win rate, avg 2.0.
-  expect(within(card as HTMLElement).getByText("7")).toBeInTheDocument();
+  expect(within(card as HTMLElement).getByText((content, element) => {
+    return element?.textContent?.trim() === "7";
+  })).toBeInTheDocument();
   expect(within(card as HTMLElement).getByText("100%")).toBeInTheDocument();
   expect(within(card as HTMLElement).getByText("2.0")).toBeInTheDocument();
 });
