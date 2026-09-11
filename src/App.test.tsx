@@ -1,7 +1,9 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { DateTime } from "luxon";
 import App from "./App";
+import { dayNumber } from "./domain/leagues";
 import "./i18n";
 import { encodeLeague } from "./domain/leagues";
 
@@ -29,9 +31,12 @@ test("league flow: create, paste a result, see standings", async () => {
   ).toBeInTheDocument();
 
   await userEvent.type(screen.getByPlaceholderText(/Who\?/), "Ada");
+  // Standings default to the current month, so the pasted result has to be
+  // today's puzzle; a fixed day number stops counting once the month rolls.
+  const today = dayNumber(DateTime.now().toISODate() as string);
   await userEvent.type(
     screen.getByPlaceholderText(/Paste/),
-    "#WW2dle #3 2/6\n🟩🟩\nhttps://x"
+    `#WW2dle #${today} 2/6\n🟩🟩\nhttps://x`
   );
   await userEvent.click(screen.getByRole("button", { name: /Add/ }));
 
