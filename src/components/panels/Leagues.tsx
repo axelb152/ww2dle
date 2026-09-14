@@ -1,47 +1,12 @@
 import { DateTime } from "luxon";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import {
-  dayNumber,
-  encodeLeague,
-  League,
-  MAX_MEMBERS,
-  monthsOf,
-  parseShareResult,
-  Standing,
-  standings,
-} from "../../domain/leagues";
-import { Guess } from "../../domain/guess";
-import { UseLeagues } from "../../hooks/useLeagues";
+import { League, monthsOf, Standing, standings } from "../../domain/leagues";
+import { todayResult, useLeagues } from "../../hooks/useLeagues";
 import { Panel } from "./Panel";
 
-const MAX_TRY_COUNT = 6;
-
-// Today's own result, read straight from the game's localStorage — no prop
-// threading needed. Null unless today's game is actually over: a half-played
-// day used to be recorded as a loss.
-function todayOwnResult(): { day: number; guessCount: number } | null {
-  const dayString = DateTime.now().toFormat("yyyy-MM-dd");
-  const all: Record<string, Guess[]> = JSON.parse(
-    localStorage.getItem("guesses") ?? "{}"
-  );
-  const guesses = all[dayString] ?? [];
-  const solved = guesses[guesses.length - 1]?.distance === 0;
-  if (!solved && guesses.length < MAX_TRY_COUNT) {
-    return null;
-  }
-  return {
-    day: dayNumber(dayString),
-    guessCount: solved ? guesses.length : 0,
-  };
-}
-
 const RANK_MEDALS = ["🥇", "🥈", "🥉"];
-
-function todayNumber(): number {
-  return dayNumber(DateTime.now().toFormat("yyyy-MM-dd"));
-}
 
 function Places({ places }: { places: number[] }) {
   const shown = places.slice(0, 5);
@@ -68,17 +33,9 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function MemberCard({
-  standing,
-  rank,
-  onRemove,
-}: {
-  standing: Standing;
-  rank: number;
-  onRemove: () => void;
-}) {
+function PlayerCard({ standing, rank }: { standing: Standing; rank: number }) {
   const { t } = useTranslation();
-  const { member, total, daysPlayed, wins, avgGuesses, streak, today, places } =
+  const { player, total, daysPlayed, wins, avgGuesses, streak, today, places } =
     standing;
 
   return (
@@ -87,7 +44,7 @@ function MemberCard({
         <span className="w-10 shrink-0">
           {RANK_MEDALS[rank - 1] ?? ""}#{rank}
         </span>
-        <span className="font-bold truncate">{member}</span>
+        <span className="font-bold truncate">{player}</span>
         <Places places={places} />
         <span className="ml-auto text-right shrink-0">
           {today != null && (
@@ -99,14 +56,6 @@ function MemberCard({
             {t("leagues.pts")}
           </span>
         </span>
-        <button
-          type="button"
-          className="shrink-0"
-          title={t("leagues.removeMember")}
-          onClick={onRemove}
-        >
-          ✖️
-        </button>
       </div>
       <div className="grid grid-cols-4 gap-1 mt-2">
         <Stat
@@ -126,142 +75,123 @@ function MemberCard({
   );
 }
 
-interface LeaguesProps extends UseLeagues {
+interface LeaguesProps {
   isOpen: boolean;
   close: () => void;
 }
 
-export function Leagues({
-  isOpen,
-  close,
-  leagues,
-  createLeague,
-  deleteLeague,
-  removeMember,
-  recordResult,
-}: LeaguesProps) {
+export function Leagues({ isOpen, close }: LeaguesProps) {
   const { t } = useTranslation();
+  const {
+    myName,
+    joined,
+    isConfigured,
+    setMyName,
+    createLeague,
+    joinLeague,
+    leaveLeague,
+    loadLeague,
+    submitResult,
+  } = useLeagues();
 
   const [openId, setOpenId] = useState<string | null>(null);
+  const [league, setLeague] = useState<League | null>(null);
+  const [loading, setLoading] = useState(false);
   const [newName, setNewName] = useState("");
-  const [newEmoji, setNewEmoji] = useState("");
-  const [member, setMember] = useState("");
-  const [shareText, setShareText] = useState("");
+  const [joinCode, setJoinCode] = useState("");
   // Worldle-style: the current month is the default view, all-time is opt-in.
   const [month, setMonth] = useState<string | null>(
     DateTime.now().toFormat("yyyy-MM")
   );
 
-  const league = leagues.find((l) => l.id === openId) ?? null;
-  const today = todayOwnResult();
-  const isFull = (l: League) => l.members.length >= MAX_MEMBERS;
+  const refresh = useCallback(
+    async (id: string) => {
+      setLoading(true);
+      setLeague(await loadLeague(id));
+      setLoading(false);
+    },
+    [loadLeague]
+  );
 
-  const handleAdd = () => {
-    if (league == null || member.trim() === "") {
+  // Load standings when a league is opened, and refetch whenever the panel
+  // is reopened so friends' new results show up.
+  // ponytail: refetch-on-open; add a supabase realtime subscription if
+  // friends want truly live updates.
+  useEffect(() => {
+    if (openId != null && isOpen) {
+      refresh(openId);
+    } else if (openId == null) {
+      setLeague(null);
+    }
+  }, [openId, isOpen, refresh]);
+
+  if (!isConfigured) {
+    return (
+      <Panel title={t("leagues.title")} isOpen={isOpen} close={close}>
+        <p className="my-4 opacity-80">{t("leagues.unavailable")}</p>
+      </Panel>
+    );
+  }
+
+  const handleCreate = async () => {
+    if (!newName.trim() || !myName.trim()) {
       return;
     }
-    if (isFull(league) && !league.members.includes(member.trim())) {
-      toast(t("leagues.full", { max: MAX_MEMBERS }));
+    const created = await createLeague(newName.trim());
+    if (created == null) {
+      toast(t("leagues.error"));
       return;
     }
-    const parsed = shareText.trim()
-      ? parseShareResult(shareText)
-      : todayOwnResult();
-    if (parsed == null) {
-      toast(t("leagues.badResult"));
+    setNewName("");
+    const today = todayResult();
+    if (today) {
+      await submitResult(created.id, myName, today.day, today.guesses);
+    }
+    setOpenId(created.id);
+  };
+
+  const handleJoin = async () => {
+    if (!joinCode.trim() || !myName.trim()) {
       return;
     }
-    recordResult(league.id, member.trim(), parsed.day, parsed.guessCount);
-    setShareText("");
-    toast(t("leagues.added"));
+    const joinedLeague = await joinLeague(joinCode.trim());
+    if (joinedLeague == null) {
+      toast(t("leagues.notFound"));
+      return;
+    }
+    setJoinCode("");
+    const today = todayResult();
+    if (today) {
+      await submitResult(joinedLeague.id, myName, today.day, today.guesses);
+    }
+    setOpenId(joinedLeague.id);
   };
 
   const handleShare = () => {
     if (league == null) {
       return;
     }
-    const url = `${window.location.origin}${
-      window.location.pathname
-    }?league=${encodeLeague(league)}`;
+    const url = `${window.location.origin}${window.location.pathname}?join=${league.id}`;
     navigator.clipboard.writeText(url).then(() => toast(t("leagues.copied")));
   };
 
+  const nameField = (
+    <label className="block text-sm">
+      {t("leagues.yourName")}
+      <input
+        className="w-full border-2 px-2 py-1 dark:bg-slate-800 mt-1"
+        placeholder={t("leagues.namePlaceholder")}
+        defaultValue={myName}
+        onBlur={(e) => setMyName(e.target.value)}
+      />
+    </label>
+  );
+
+  const today = todayResult();
+
   return (
     <Panel title={t("leagues.title")} isOpen={isOpen} close={close}>
-      {league == null ? (
-        <div className="my-4 space-y-4">
-          <p className="text-sm opacity-80">{t("leagues.intro")}</p>
-          <ul className="space-y-1">
-            {leagues.map((l) => (
-              <li key={l.id} className="flex items-center">
-                <button
-                  type="button"
-                  className="flex-auto text-left border-2 px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800"
-                  onClick={() => setOpenId(l.id)}
-                >
-                  {l.emoji || "🏆"} {l.name}{" "}
-                  <span className="opacity-60">
-                    ({l.members.length}/{MAX_MEMBERS} {t("leagues.members")})
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="ml-2 px-2"
-                  title={t("leagues.delete")}
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        t("leagues.confirmDelete", { name: l.name })
-                      )
-                    ) {
-                      deleteLeague(l.id);
-                    }
-                  }}
-                >
-                  🗑️
-                </button>
-              </li>
-            ))}
-            {leagues.length === 0 && (
-              <li className="opacity-60">{t("leagues.empty")}</li>
-            )}
-          </ul>
-          <form
-            className="flex gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (newName.trim()) {
-                setOpenId(
-                  createLeague(newName.trim(), newEmoji.trim() || undefined).id
-                );
-                setNewName("");
-                setNewEmoji("");
-              }
-            }}
-          >
-            <input
-              className="w-10 border-2 px-1 py-1 text-center dark:bg-slate-800"
-              maxLength={2}
-              placeholder="🏆"
-              title={t("leagues.emoji")}
-              value={newEmoji}
-              onChange={(e) => setNewEmoji(e.target.value)}
-            />
-            <input
-              className="flex-auto border-2 px-2 py-1 dark:bg-slate-800"
-              placeholder={t("leagues.namePlaceholder")}
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="border-2 px-3 uppercase bg-red-600 hover:bg-red-500 text-white"
-            >
-              {t("leagues.create")}
-            </button>
-          </form>
-        </div>
-      ) : (
+      {league != null && openId != null ? (
         <div className="my-4 space-y-4">
           <button
             type="button"
@@ -272,7 +202,7 @@ export function Leagues({
           </button>
           <div className="flex items-center gap-2">
             <h3 className="text-xl font-bold flex-auto truncate">
-              {league.emoji || "🏆"} {league.name}
+              🏆 {league.name}
             </h3>
             <select
               className="border-2 px-1 py-1 dark:bg-slate-800"
@@ -281,78 +211,35 @@ export function Leagues({
               onChange={(e) => setMonth(e.target.value || null)}
             >
               <option value="">{t("leagues.allTime")}</option>
-              {monthsOf(league).map((m) => (
+              {monthsOf(league.results).map((m) => (
                 <option key={m} value={m}>
                   {DateTime.fromISO(`${m}-01`).toFormat("LLL yyyy")}
                 </option>
               ))}
             </select>
           </div>
-          <p className="text-xs opacity-60">
-            {league.members.length}/{MAX_MEMBERS} {t("leagues.members")}
-          </p>
 
-          <ul className="space-y-2">
-            {standings(league, {
-              month: month ?? undefined,
-              today: todayNumber(),
-            }).map((standing, i) => (
-              <MemberCard
-                key={standing.member}
-                standing={standing}
-                rank={i + 1}
-                onRemove={() => {
-                  if (
-                    window.confirm(
-                      t("leagues.confirmRemoveMember", {
-                        name: standing.member,
-                      })
-                    )
-                  ) {
-                    removeMember(league.id, standing.member);
-                  }
-                }}
-              />
-            ))}
-            {league.members.length === 0 && (
-              <li className="opacity-60">{t("leagues.noMembers")}</li>
-            )}
-          </ul>
-
-          <div className="space-y-2 border-t-2 pt-3">
-            <h4 className="font-bold">{t("leagues.addResult")}</h4>
-            <input
-              className="w-full border-2 px-2 py-1 dark:bg-slate-800"
-              list="league-members"
-              placeholder={t("leagues.memberPlaceholder")}
-              value={member}
-              onChange={(e) => setMember(e.target.value)}
-            />
-            <datalist id="league-members">
-              {league.members.map((m) => (
-                <option key={m} value={m} />
+          {loading ? (
+            <p className="opacity-60">{t("leagues.loading")}</p>
+          ) : (
+            <ul className="space-y-2">
+              {standings(league.results, {
+                month: month ?? undefined,
+                today: today?.day,
+              }).map((standing, i) => (
+                <PlayerCard
+                  key={standing.player}
+                  standing={standing}
+                  rank={i + 1}
+                />
               ))}
-            </datalist>
-            <textarea
-              className="w-full border-2 px-2 py-1 dark:bg-slate-800"
-              rows={3}
-              placeholder={
-                today ? t("leagues.pasteOrMine") : t("leagues.pasteFriend")
-              }
-              value={shareText}
-              onChange={(e) => setShareText(e.target.value)}
-            />
-            <button
-              type="button"
-              className="border-2 px-3 py-1 uppercase bg-red-600 hover:bg-red-500 text-white disabled:opacity-50"
-              disabled={member.trim() === "" || (!shareText.trim() && !today)}
-              onClick={handleAdd}
-            >
-              {shareText.trim() ? t("leagues.add") : t("leagues.addMine")}
-            </button>
-          </div>
+              {league.results.length === 0 && (
+                <li className="opacity-60">{t("leagues.noResults")}</li>
+              )}
+            </ul>
+          )}
 
-          <div className="border-t-2 pt-3">
+          <div className="border-t-2 pt-3 space-y-2">
             <button
               type="button"
               className="border-2 px-3 py-1 uppercase w-full"
@@ -360,8 +247,91 @@ export function Leagues({
             >
               🔗 {t("leagues.share")}
             </button>
-            <p className="text-xs opacity-60 mt-1">{t("leagues.shareHint")}</p>
+            <p className="text-xs opacity-60 break-all">
+              {t("leagues.codeLabel")}: <strong>{league.id}</strong>
+            </p>
+            <button
+              type="button"
+              className="text-sm underline opacity-70"
+              onClick={() => {
+                if (window.confirm(t("leagues.confirmLeave"))) {
+                  leaveLeague(league.id);
+                  setOpenId(null);
+                }
+              }}
+            >
+              {t("leagues.leave")}
+            </button>
           </div>
+        </div>
+      ) : (
+        <div className="my-4 space-y-4">
+          <p className="text-sm opacity-80">{t("leagues.intro")}</p>
+          {nameField}
+
+          <ul className="space-y-1">
+            {joined.map((j) => (
+              <li key={j.id}>
+                <button
+                  type="button"
+                  className="w-full text-left border-2 px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  onClick={() => setOpenId(j.id)}
+                >
+                  🏆 {j.name}
+                </button>
+              </li>
+            ))}
+            {joined.length === 0 && (
+              <li className="opacity-60">{t("leagues.empty")}</li>
+            )}
+          </ul>
+
+          <form
+            className="flex gap-2 border-t-2 pt-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCreate();
+            }}
+          >
+            <input
+              className="flex-auto border-2 px-2 py-1 dark:bg-slate-800"
+              placeholder={t("leagues.newPlaceholder")}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="border-2 px-3 uppercase bg-red-600 hover:bg-red-500 text-white disabled:opacity-50"
+              disabled={!newName.trim() || !myName.trim()}
+            >
+              {t("leagues.create")}
+            </button>
+          </form>
+
+          <form
+            className="flex gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleJoin();
+            }}
+          >
+            <input
+              className="flex-auto border-2 px-2 py-1 dark:bg-slate-800"
+              placeholder={t("leagues.joinPlaceholder")}
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="border-2 px-3 uppercase disabled:opacity-50"
+              disabled={!joinCode.trim() || !myName.trim()}
+            >
+              {t("leagues.join")}
+            </button>
+          </form>
+          {!myName.trim() && (
+            <p className="text-xs opacity-60">{t("leagues.nameFirst")}</p>
+          )}
         </div>
       )}
     </Panel>

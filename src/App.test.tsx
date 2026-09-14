@@ -1,90 +1,126 @@
 import React from "react";
+import { DateTime } from "luxon";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { DateTime } from "luxon";
 import App from "./App";
-import { dayNumber } from "./domain/leagues";
 import "./i18n";
-import { encodeLeague } from "./domain/leagues";
+
+// In-memory fake of the Supabase RPC surface (create_league / get_league /
+// submit_result) so the league flow runs end-to-end without a network.
+jest.mock("./lib/supabase", () => {
+  const names: Record<string, string> = {};
+  const rows: Array<{
+    league_id: string;
+    day: number;
+    player: string;
+    guesses: number;
+  }> = [];
+  return {
+    __reset: () => {
+      for (const k of Object.keys(names)) delete names[k];
+      rows.length = 0;
+    },
+    isConfigured: true,
+    supabase: {
+      rpc: async (fn: string, a: Record<string, unknown>) => {
+        if (fn === "create_league") {
+          names["testcode"] = a.p_name as string;
+          return { data: "testcode", error: null };
+        }
+        if (fn === "get_league") {
+          const name = names[a.p_id as string];
+          if (name == null) return { data: null, error: null };
+          return {
+            data: {
+              id: a.p_id,
+              name,
+              results: rows
+                .filter((r) => r.league_id === a.p_id)
+                .map(({ day, player, guesses }) => ({ day, player, guesses })),
+            },
+            error: null,
+          };
+        }
+        if (fn === "submit_result") {
+          rows.push({
+            league_id: a.p_league_id as string,
+            day: a.p_day as number,
+            player: a.p_player as string,
+            guesses: a.p_guesses as number,
+          });
+          return { data: null, error: null };
+        }
+        return { data: null, error: null };
+      },
+    },
+  };
+});
 
 beforeEach(() => {
   localStorage.clear();
   window.history.replaceState(null, "", "/");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require("./lib/supabase").__reset();
 });
 
-// Drives the real component tree: open the Leagues panel, create a league,
-// paste a friend's share result, and confirm it lands in the standings.
-test("league flow: create, paste a result, see standings", async () => {
-  render(<App />);
+test("league flow: create a league, own result auto-submits, standings show it", async () => {
+  localStorage.clear();
+  // Seed today's game as a solve in 2 guesses => 7 points.
+  const today = DateTime.now().toFormat("yyyy-MM-dd");
+  localStorage.setItem(
+    "guesses",
+    JSON.stringify({
+      [today]: [
+        { name: "x", distance: 100, direction: "N" },
+        { name: "y", distance: 0, direction: "N" },
+      ],
+    })
+  );
 
+  render(<App />);
   await userEvent.click(screen.getByTitle("Leagues"));
 
+  await userEvent.type(screen.getByPlaceholderText("Your name"), "Ada");
   await userEvent.type(
-    screen.getByPlaceholderText("League name"),
+    screen.getByPlaceholderText("New league name"),
     "D-Day Boys"
   );
   await userEvent.click(screen.getByRole("button", { name: "Create" }));
 
-  // Now in the league detail view.
   expect(
-    screen.getByRole("heading", { name: /D-Day Boys/ })
+    await screen.findByRole("heading", { name: /D-Day Boys/ })
   ).toBeInTheDocument();
 
-  await userEvent.type(screen.getByPlaceholderText(/Who\?/), "Ada");
-  // Standings default to the current month, so the pasted result has to be
-  // today's puzzle; a fixed day number stops counting once the month rolls.
-  const today = dayNumber(DateTime.now().toISODate() as string);
-  await userEvent.type(
-    screen.getByPlaceholderText(/Paste/),
-    `#WW2dle #${today} 2/6\n🟩🟩\nhttps://x`
-  );
-  await userEvent.click(screen.getByRole("button", { name: /Add/ }));
-
-  const card = screen.getByText("Ada").closest("li");
+  const card = (await screen.findByText("Ada")).closest("li");
   // Solve in 2 guesses => 7 points, 1 game, 100% win rate, avg 2.0.
   expect(within(card as HTMLElement).getByText("7")).toBeInTheDocument();
   expect(within(card as HTMLElement).getByText("100%")).toBeInTheDocument();
   expect(within(card as HTMLElement).getByText("2.0")).toBeInTheDocument();
 });
 
-// Regression: the panel kept its own useLeagues state, so a league imported in
-// App wasn't in the panel's list until a reload.
-test("a ?league= link import shows up in the panel right away", async () => {
-  const code = encodeLeague({
-    id: "abc123",
-    name: "Kursk Krew",
-    members: ["Ada"],
-    results: { 3: { Ada: 2 } },
-  });
-  window.history.replaceState(null, "", `/?league=${code}`);
-  window.confirm = () => true;
-
-  render(<App />);
-
-  await userEvent.click(screen.getByTitle("Leagues"));
-  expect(screen.getByText(/Kursk Krew/)).toBeInTheDocument();
-});
-
-// Regression: a half-played day was recorded as a loss (3 points), locking the
-// day in. Own result is only offered once the game is actually over.
-test("no own result to add while today's game is unfinished", async () => {
-  const dayString = new Date().toISOString().slice(0, 10);
+// Regression: a half-played day was recorded as a loss (3 points). Own result
+// is only submitted once today's game is actually over.
+test("no own result submitted while today's game is unfinished", async () => {
+  localStorage.clear();
+  const today = DateTime.now().toFormat("yyyy-MM-dd");
   localStorage.setItem(
     "guesses",
     JSON.stringify({
-      [dayString]: [{ name: "Kursk", distance: 500000, direction: "N" }],
+      [today]: [{ name: "Kursk", distance: 500000, direction: "N" }],
     })
   );
 
   render(<App />);
-
   await userEvent.click(screen.getByTitle("Leagues"));
-  await userEvent.type(screen.getByPlaceholderText("League name"), "Mid Game");
+  await userEvent.type(screen.getByPlaceholderText("Your name"), "Ada");
+  await userEvent.type(
+    screen.getByPlaceholderText("New league name"),
+    "Mid Game"
+  );
   await userEvent.click(screen.getByRole("button", { name: "Create" }));
-  await userEvent.type(screen.getByPlaceholderText(/Who\?/), "Ada");
 
-  expect(screen.getByRole("button", { name: /Add my result/ })).toBeDisabled();
   expect(
-    screen.getByPlaceholderText("Paste a friend's share text")
+    await screen.findByRole("heading", { name: /Mid Game/ })
   ).toBeInTheDocument();
+  expect(await screen.findByText(/No results yet/)).toBeInTheDocument();
 });

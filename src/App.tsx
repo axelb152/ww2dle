@@ -8,11 +8,10 @@ import { InfosFr } from "./components/panels/InfosFr";
 import { Settings } from "./components/panels/Settings";
 import { Leagues } from "./components/panels/Leagues";
 import { useSettings } from "./hooks/useSettings";
-import { useLeagues } from "./hooks/useLeagues";
-import { decodeLeague } from "./domain/leagues";
+import { LeaguesProvider, useLeagues } from "./hooks/useLeagues";
 import { WW2dle } from "./components/WW2dle";
 
-function App() {
+function AppInner() {
   const { t, i18n } = useTranslation();
 
   const [infoOpen, setInfoOpen] = useState(false);
@@ -20,26 +19,21 @@ function App() {
   const [leaguesOpen, setLeaguesOpen] = useState(false);
 
   const [settingsData, updateSettings] = useSettings();
-  // One shared instance: the ?league= import below has to be visible to the panel.
-  const leaguesState = useLeagues();
-  const { importLeague } = leaguesState;
+  const { joinLeague } = useLeagues();
 
-  // Import a shared league snapshot from a ?league=<code> link, then clean the URL.
+  // Auto-join from a ?join=<league_id> link, then clean the URL.
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get("league");
-    if (code == null) {
+    const id = new URLSearchParams(window.location.search).get("join");
+    if (id == null) {
       return;
     }
-    const league = decodeLeague(code);
-    if (
-      league != null &&
-      window.confirm(t("leagues.importPrompt", { name: league.name }))
-    ) {
-      importLeague(league);
-      setLeaguesOpen(true);
-    }
     window.history.replaceState(null, "", window.location.pathname);
-  }, [t, importLeague]);
+    joinLeague(id).then((league) => {
+      if (league != null) {
+        setLeaguesOpen(true);
+      }
+    });
+  }, [joinLeague]);
 
   useEffect(() => {
     if (settingsData.theme === "dark") {
@@ -78,11 +72,7 @@ function App() {
         settingsData={settingsData}
         updateSettings={updateSettings}
       />
-      <Leagues
-        isOpen={leaguesOpen}
-        close={() => setLeaguesOpen(false)}
-        {...leaguesState}
-      />
+      <Leagues isOpen={leaguesOpen} close={() => setLeaguesOpen(false)} />
       <div className="flex justify-center flex-auto dark:bg-slate-900 dark:text-slate-50">
         <div className="w-full max-w-lg flex flex-col">
           <header className="border-b-2 border-gray-200 flex">
@@ -127,6 +117,14 @@ function App() {
         </div>
       </div>
     </>
+  );
+}
+
+function App() {
+  return (
+    <LeaguesProvider>
+      <AppInner />
+    </LeaguesProvider>
   );
 }
 

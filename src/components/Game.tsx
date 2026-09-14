@@ -13,6 +13,7 @@ import { useMode } from "../hooks/useMode";
 import { useBattle } from "../hooks/useBattle";
 import { getHint } from "../domain/hints";
 import battlePhotos from "../domain/battlePhotos.json";
+import { todayResult, useLeagues } from "../hooks/useLeagues";
 
 function getDayString() {
   return DateTime.now().toFormat("yyyy-MM-dd");
@@ -49,6 +50,26 @@ export function Game({ settingsData }: GameProps) {
 
   const gameWon = guesses[guesses.length - 1]?.distance === 0;
   const hint = gameEnded ? null : getHint(guesses.length, battle);
+
+  const { joined, myName, submitResult, isConfigured } = useLeagues();
+
+  // On finishing, push today's result to every joined league. Once per day
+  // (localStorage marker); newly joined leagues get today's result on join.
+  useEffect(() => {
+    if (!isConfigured || !gameEnded || !myName.trim() || joined.length === 0) {
+      return;
+    }
+    const today = todayResult();
+    if (today == null) {
+      return;
+    }
+    const marker = `leagues.submitted.${today.day}`;
+    if (localStorage.getItem(marker)) {
+      return;
+    }
+    localStorage.setItem(marker, "1");
+    joined.forEach((j) => submitResult(j.id, myName, today.day, today.guesses));
+  }, [gameEnded, isConfigured, joined, myName, submitResult]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
