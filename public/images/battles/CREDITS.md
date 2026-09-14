@@ -34,7 +34,7 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **bzura** — [WBK_-battle_of_Bzura_1939.jpg](https://commons.wikimedia.org/wiki/File:WBK_-battle_of_Bzura_1939.jpg) — Public domain — Unknown authorUnknown author
 - **narvik** — [Allied_soldiers_during_the_battle_of_Narvik.jpg](https://commons.wikimedia.org/wiki/File:Allied_soldiers_during_the_battle_of_Narvik.jpg) — CC BY-SA 2.0 — Ukjent/Unknown
 - **drobak-sound** — [German_cruiser_Blücher_sinking.jpg](https://commons.wikimedia.org/wiki/File:German_cruiser_Bl%C3%BCcher_sinking.jpg) — Public domain — Unknown authorUnknown author
-- **suomussalmi** — [Battle_suomussalmi.jpg](https://commons.wikimedia.org/wiki/File:Battle_suomussalmi.jpg) — Public domain — Edward J. Krasnobowski, Frank Martini
+- **suomussalmi** — [Marching_to_Raate-road.jpg](https://commons.wikimedia.org/wiki/File:Marching_to_Raate-road.jpg) — Public domain — unknown
 - **tali-ihantala** — [Tali-Ihantala_25_06_1944.jpg](https://commons.wikimedia.org/wiki/File:Tali-Ihantala_25_06_1944.jpg) — CC BY-SA 4.0 — VT1978
 - **petsamo-kirkenes** — [Kirkinesdesant.jpg](https://commons.wikimedia.org/wiki/File:Kirkinesdesant.jpg) — CC BY 4.0 — Unknown authorUnknown author
 - **pearl-harbor** — [Attack_on_Pearl_Harbor_Japanese_planes_view.jpg](https://commons.wikimedia.org/wiki/File:Attack_on_Pearl_Harbor_Japanese_planes_view.jpg) — Public domain — Imperial Japanese Navy

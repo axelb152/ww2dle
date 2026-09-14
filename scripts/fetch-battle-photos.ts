@@ -44,6 +44,9 @@ const FILE_OVERRIDES: Record<string, string> = {
     'Bundesarchiv_DVM_10_Bild-23-63-46,_Schlachtschiff_"Scharnhorst".jpg',
   "st-nazaire":
     "Bundesarchiv_Bild_101II-MW-3722-03,_St._Nazaire,_Zerstörer_'HMS_Campbeltown'.jpg",
+  // The article's lead image is a West Point atlas map captioned with the
+  // battle's name, which gives the answer away.
+  suomussalmi: "Marching_to_Raate-road.jpg",
 };
 // No usable wartime photo on Commons: these keep the map silhouette.
 const NO_PHOTO = new Set(["novorossiysk"]);
