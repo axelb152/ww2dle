@@ -7,7 +7,7 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **moscow** — [RIAN_archive_887721_Defense_of_Moscow.jpg](https://commons.wikimedia.org/wiki/File:RIAN_archive_887721_Defense_of_Moscow.jpg) — CC BY-SA 3.0 — Knorring / Олег Кнорринг
 - **leningrad** — [Anti_aircraft_Leningrad_1941.JPG](https://commons.wikimedia.org/wiki/File:Anti_aircraft_Leningrad_1941.JPG) — Public domain — Boris Kudoyarov
 - **kiev-1941** — [Bundesarchiv_Bild_183-B12190,_Kiew,_Brand_in_der_Hauptstraße.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-B12190,_Kiew,_Brand_in_der_Hauptstra%C3%9Fe.jpg) — CC BY-SA 3.0 de — Kraagranger [Kraayvanger]
-- **smolensk** — [Smolensk_1941_Diagram.jpg](https://commons.wikimedia.org/wiki/File:Smolensk_1941_Diagram.jpg) — CC BY-SA 3.0 — Livedawg
+- **smolensk** — [Bundesarchiv_Bild_101I-137-1032-14A,_Russland,_brennendes_Dorf,_deutsche_Kavallerie.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-137-1032-14A,_Russland,_brennendes_Dorf,_deutsche_Kavallerie.jpg) — CC BY-SA 3.0 de — Kessler, Rudolf
 - **kharkov** — [Kharkovcounteroffensive.png](https://commons.wikimedia.org/wiki/File:Kharkovcounteroffensive.png) — Public domain — JonCatalán(Talk)
 - **sevastopol** — [Bundesarchiv_N_1603_Bild-121,_Russland,_Sewastopol,_zerstörter_Hafen.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_N_1603_Bild-121,_Russland,_Sewastopol,_zerst%C3%B6rter_Hafen.jpg) — CC BY-SA 3.0 de — Horst Grund
 - **brest-fortress** — [Eastern_Front_1941-06_to_1941-09.png](https://commons.wikimedia.org/wiki/File:Eastern_Front_1941-06_to_1941-09.png) — CC BY-SA 3.0 — Gdr

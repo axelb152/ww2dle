@@ -27,7 +27,7 @@ const THUMB_WIDTH = 800;
 // Lead images that are not battle photos. `plan(?!e)` spares "planes";
 // flags are allowed (Raising the Flag on Iwo Jima is a photo).
 const NOT_A_PHOTO =
-  /map|karte|carte|situation|plan(?!e)|emblem|insignia|logo|coat_of_arms|locat|\.svg$|\.gif$/i;
+  /map|karte|carte|diagram|situation|plan(?!e)|emblem|insignia|logo|coat_of_arms|locat|\.svg$|\.gif$/i;
 // Search results that are about the battle's media echo, not the battle.
 const NOT_AN_ARTICLE = /\bfilm\b|miniseries|video game|novel|painting|album/i;
 // Battles whose search resolves to the wrong article.
@@ -47,6 +47,10 @@ const FILE_OVERRIDES: Record<string, string> = {
   // The article's lead image is a West Point atlas map captioned with the
   // battle's name, which gives the answer away.
   suomussalmi: "Marching_to_Raate-road.jpg",
+  // The article's infobox leads with a drawn diagram titled "Battle of
+  // Smolensk -- 1941", so the picture spells out the answer.
+  smolensk:
+    "Bundesarchiv_Bild_101I-137-1032-14A,_Russland,_brennendes_Dorf,_deutsche_Kavallerie.jpg",
 };
 // No usable wartime photo on Commons: these keep the map silhouette.
 const NO_PHOTO = new Set(["novorossiysk"]);
