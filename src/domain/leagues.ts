@@ -1,16 +1,9 @@
 import { DateTime } from "luxon";
+import { START_DATE } from "./schedule";
 
-const START_DATE = DateTime.fromISO("2026-08-01");
-
-// The ww2dle day number for a "yyyy-MM-dd" day string. Clamped at 0: playing
-// before START_DATE used to make an invalid Interval, whose length is NaN, and
-// "#WW2dle #NaN" leaked into shared results.
-export function dayNumber(dayString: string): number {
-  return Math.max(
-    0,
-    Math.floor(DateTime.fromISO(dayString).diff(START_DATE, "day").days)
-  );
-}
+// The day number drives the daily puzzle rotation as well as league standings,
+// so it lives in ./schedule. Re-exported here so league callers keep working.
+export { dayNumber } from "./schedule";
 
 // Worldle caps a league at 25; same cap keeps standings readable on a phone.
 export const MAX_MEMBERS = 25;
