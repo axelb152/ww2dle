@@ -236,14 +236,6 @@ export const battles: Battle[] = [
     theater: "Eastern Front",
   },
   {
-    code: "novorossiysk",
-    latitude: 44.72,
-    longitude: 37.77,
-    name: "Novorossiysk",
-    year: 1943,
-    theater: "Eastern Front",
-  },
-  {
     code: "dnieper",
     latitude: 48.46,
     longitude: 34.0,
@@ -315,6 +307,14 @@ export const battles: Battle[] = [
     longitude: -157.95,
     name: "Pearl Harbor",
     year: 1941,
+    theater: "Pacific",
+  },
+  {
+    code: "los-angeles",
+    latitude: 34.05,
+    longitude: -118.24,
+    name: "Battle of Los Angeles",
+    year: 1942,
     theater: "Pacific",
   },
   {
@@ -1040,7 +1040,6 @@ export const battleCountry: Record<string, string> = {
   "jassy-kishinev": "MD",
   odessa: "UA",
   caucasus: "RU",
-  novorossiysk: "RU",
   dnieper: "UA",
   westerplatte: "PL",
   bzura: "PL",
@@ -1052,6 +1051,7 @@ export const battleCountry: Record<string, string> = {
   "petsamo-kirkenes": "RU",
   // Pacific
   "pearl-harbor": "US",
+  "los-angeles": "US",
   midway: "US",
   "coral-sea": "AU",
   guadalcanal: "SB",

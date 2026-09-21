@@ -102,7 +102,7 @@ const FILE_OVERRIDES: Record<string, string> = {
   singapore: "Surrender_Singapore.jpg",
 };
 // No usable wartime photo on Commons: these keep the map silhouette.
-const NO_PHOTO = new Set(["novorossiysk"]);
+const NO_PHOTO = new Set<string>();
 
 interface PhotoResult {
   code: string;
