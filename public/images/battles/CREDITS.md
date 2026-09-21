@@ -38,6 +38,7 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **tali-ihantala** — [Tali-Ihantala_25_06_1944.jpg](https://commons.wikimedia.org/wiki/File:Tali-Ihantala_25_06_1944.jpg) — CC BY-SA 4.0 — VT1978
 - **petsamo-kirkenes** — [Kirkinesdesant.jpg](https://commons.wikimedia.org/wiki/File:Kirkinesdesant.jpg) — CC BY 4.0 — Unknown authorUnknown author
 - **pearl-harbor** — [Attack_on_Pearl_Harbor_Japanese_planes_view.jpg](https://commons.wikimedia.org/wiki/File:Attack_on_Pearl_Harbor_Japanese_planes_view.jpg) — Public domain — Imperial Japanese Navy
+- **los-angeles** — [Battle_of_Los_Angeles_LATimes.jpg](https://commons.wikimedia.org/wiki/File:Battle_of_Los_Angeles_LATimes.jpg) — Public domain — Los Angeles Times
 - **midway** — [USS_Yorktown_(CV-5)_is_hit_by_a_torpedo_on_4_June_1942.jpg](https://commons.wikimedia.org/wiki/File:USS_Yorktown_(CV-5)_is_hit_by_a_torpedo_on_4_June_1942.jpg) — Public domain — USN, photographed from USS Pensacola (CA-24)
 - **coral-sea** — [Large_explosion_aboard_USS_Lexington_(CV-2),_8_May_1942_(80-G-16651).jpg](https://commons.wikimedia.org/wiki/File:Large_explosion_aboard_USS_Lexington_(CV-2),_8_May_1942_(80-G-16651).jpg) — Public domain — Unknown authorUnknown author
 - **guadalcanal** — [Naval_Battle_of_Guadalcanal.jpg](https://commons.wikimedia.org/wiki/File:Naval_Battle_of_Guadalcanal.jpg) — Public domain — Official U.S. Navy photograph
