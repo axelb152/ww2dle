@@ -27,7 +27,7 @@ const THUMB_WIDTH = 800;
 // Lead images that are not battle photos. `plan(?!e)` spares "planes";
 // flags are allowed (Raising the Flag on Iwo Jima is a photo).
 const NOT_A_PHOTO =
-  /map|karte|carte|situation|plan(?!e)|emblem|insignia|logo|coat_of_arms|locat|\.svg$|\.gif$/i;
+  /map|karte|carte|diagram|situation|plan(?!e)|emblem|insignia|logo|coat_of_arms|locat|\.svg$|\.gif$/i;
 // Search results that are about the battle's media echo, not the battle.
 const NOT_AN_ARTICLE = /\bfilm\b|miniseries|video game|novel|painting|album/i;
 // Battles whose search resolves to the wrong article.
@@ -47,6 +47,37 @@ const FILE_OVERRIDES: Record<string, string> = {
   // The article's lead image is a West Point atlas map captioned with the
   // battle's name, which gives the answer away.
   suomussalmi: "Marching_to_Raate-road.jpg",
+  // The article's infobox leads with a drawn diagram titled "Battle of
+  // Smolensk -- 1941", so the picture spells out the answer.
+  smolensk:
+    "Bundesarchiv_Bild_101I-137-1032-14A,_Russland,_brennendes_Dorf,_deutsche_Kavallerie.jpg",
+  // The article's infobox leads with a theatre-wide Eastern Front map, not a photo.
+  "brest-fortress":
+    "Wojska_niemieckie_we_wsi_na_froncie_wschodnim_(2-1118).jpg",
+  // The article's infobox leads with a Cotentin Peninsula map, not a photo.
+  cherbourg: "Cherbourg1944-Combat_avParis.jpg",
+  // The article's infobox leads with an Operation Olive plan map, not a photo.
+  "gothic-line": "The_British_Army_in_Italy_1944_NA18091.jpg",
+  // The article's infobox leads with a theatre-wide Eastern Front map, not a photo.
+  "jassy-kishinev":
+    "Bundesarchiv_Bild_101I-244-2321-34,_Ostfront-Süd,_Panzer_V_(Panther).jpg",
+  // The article's infobox leads with a map of the Japanese conquest of Java, not a photo.
+  "java-sea": "Exeter_sinking.jpg",
+  // The article's infobox leads with a counteroffensive map labelling Kharkov itself.
+  kharkov:
+    "Bundesarchiv_Bild_101III-Zschaeckel-186-36,_Charkow,_Waffen-SS_vor_brennendem_Haus.jpg",
+  // The article's infobox leads with a drawn assault diagram, not a photo.
+  koenigsberg: "Уличный_бой_в_Кенигсберге.jpg",
+  // The article's infobox leads with a New Guinea map labelling Kokoda itself.
+  "kokoda-track": "AWM_027054_16th_Brigade_moving_along_track.jpg",
+  // The article's infobox leads with a Bagration map labelling Minsk itself.
+  "minsk-1944": "На_центральной_площади_освобожденного_Минска.jpg",
+  // The article's infobox leads with a West Point atlas map of the salient, not a photo.
+  rzhev:
+    "Bundesarchiv_Bild_101I-269-0219-24,_Russland,_Soldaten_auf_nasser_Strasse.jpg",
+  // The article's infobox leads with a map of the Japanese conquest of Burma, not a photo.
+  yenangyaung:
+    "British_troops_destroy_equipment_and_machinery_at_the_Yenangyaung_oilfields_in_Burma_before_retreating,_16_April_1942._IND989.jpg",
 };
 // No usable wartime photo on Commons: these keep the map silhouette.
 const NO_PHOTO = new Set(["novorossiysk"]);

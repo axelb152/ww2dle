@@ -7,12 +7,12 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **moscow** — [RIAN_archive_887721_Defense_of_Moscow.jpg](https://commons.wikimedia.org/wiki/File:RIAN_archive_887721_Defense_of_Moscow.jpg) — CC BY-SA 3.0 — Knorring / Олег Кнорринг
 - **leningrad** — [Anti_aircraft_Leningrad_1941.JPG](https://commons.wikimedia.org/wiki/File:Anti_aircraft_Leningrad_1941.JPG) — Public domain — Boris Kudoyarov
 - **kiev-1941** — [Bundesarchiv_Bild_183-B12190,_Kiew,_Brand_in_der_Hauptstraße.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-B12190,_Kiew,_Brand_in_der_Hauptstra%C3%9Fe.jpg) — CC BY-SA 3.0 de — Kraagranger [Kraayvanger]
-- **smolensk** — [Smolensk_1941_Diagram.jpg](https://commons.wikimedia.org/wiki/File:Smolensk_1941_Diagram.jpg) — CC BY-SA 3.0 — Livedawg
-- **kharkov** — [Kharkovcounteroffensive.png](https://commons.wikimedia.org/wiki/File:Kharkovcounteroffensive.png) — Public domain — JonCatalán(Talk)
+- **smolensk** — [Bundesarchiv_Bild_101I-137-1032-14A,_Russland,_brennendes_Dorf,_deutsche_Kavallerie.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-137-1032-14A,_Russland,_brennendes_Dorf,_deutsche_Kavallerie.jpg) — CC BY-SA 3.0 de — Kessler, Rudolf
+- **kharkov** — [Bundesarchiv_Bild_101III-Zschaeckel-186-36,_Charkow,_Waffen-SS_vor_brennendem_Haus.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101III-Zschaeckel-186-36,_Charkow,_Waffen-SS_vor_brennendem_Haus.jpg) — CC BY-SA 3.0 de — Zschäckel, Friedrich
 - **sevastopol** — [Bundesarchiv_N_1603_Bild-121,_Russland,_Sewastopol,_zerstörter_Hafen.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_N_1603_Bild-121,_Russland,_Sewastopol,_zerst%C3%B6rter_Hafen.jpg) — CC BY-SA 3.0 de — Horst Grund
-- **brest-fortress** — [Eastern_Front_1941-06_to_1941-09.png](https://commons.wikimedia.org/wiki/File:Eastern_Front_1941-06_to_1941-09.png) — CC BY-SA 3.0 — Gdr
-- **minsk-1944** — [Operation_bagration_battle_wizebsk_1944_june_22-27.png](https://commons.wikimedia.org/wiki/File:Operation_bagration_battle_wizebsk_1944_june_22-27.png) — CC BY-SA 3.0 — Kl833x9
-- **rzhev** — [Rzhev_salient_1941-1942.JPG](https://commons.wikimedia.org/wiki/File:Rzhev_salient_1941-1942.JPG) — Public domain — The History Department of the United States Military Academy
+- **brest-fortress** — [Wojska_niemieckie_we_wsi_na_froncie_wschodnim_(2-1118).jpg](https://commons.wikimedia.org/wiki/File:Wojska_niemieckie_we_wsi_na_froncie_wschodnim_(2-1118).jpg) — Public domain — Bieling
+- **minsk-1944** — [На_центральной_площади_освобожденного_Минска.jpg](https://commons.wikimedia.org/wiki/File:%D0%9D%D0%B0_%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9_%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D0%B8_%D0%BE%D1%81%D0%B2%D0%BE%D0%B1%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%BD%D0%BE%D0%B3%D0%BE_%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%D0%B0.jpg) — CC BY 4.0 — Unknown authorUnknown author
+- **rzhev** — [Bundesarchiv_Bild_101I-269-0219-24,_Russland,_Soldaten_auf_nasser_Strasse.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-269-0219-24,_Russland,_Soldaten_auf_nasser_Strasse.jpg) — CC BY-SA 3.0 de — Böhmer
 - **demyansk** — [Bundesarchiv_Bild_101I-003-3445-33,_Russland,_Lufttransport_mit_Junkers_Ju_52.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-003-3445-33,_Russland,_Lufttransport_mit_Junkers_Ju_52.jpg) — CC BY-SA 3.0 de — Ullrich
 - **kerch** — [Bombardowanie_przez_lotnictwo_niemieckie_miasta_Kercz_(2-832).jpg](https://commons.wikimedia.org/wiki/File:Bombardowanie_przez_lotnictwo_niemieckie_miasta_Kercz_(2-832).jpg) — Public domain — Blaschka
 - **korsun-pocket** — [RIAN_archive_606710_Tank_assault_force_in_Korsun-Shevchenkovski_region.jpg](https://commons.wikimedia.org/wiki/File:RIAN_archive_606710_Tank_assault_force_in_Korsun-Shevchenkovski_region.jpg) — CC BY-SA 3.0 — I. Ozerskij / И. Озерский
@@ -23,10 +23,10 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **vienna-offensive** — [Vienna_Operations.jpg](https://commons.wikimedia.org/wiki/File:Vienna_Operations.jpg) — Public domain — A. Grigoryev
 - **berlin** — [Raising_a_flag_over_the_Reichstag_-_Restoration.jpg](https://commons.wikimedia.org/wiki/File:Raising_a_flag_over_the_Reichstag_-_Restoration.jpg) — Public domain — Yevgeny Khaldei / Adam Cuerden
 - **seelow-heights** — [Gedenkstätte_Seelower_Höhen_Blick_ins_Oderbruch.JPG](https://commons.wikimedia.org/wiki/File:Gedenkst%C3%A4tte_Seelower_H%C3%B6hen_Blick_ins_Oderbruch.JPG) — CC BY-SA 3.0 — Assenmacher
-- **koenigsberg** — [Battle_Of_Königsberg_Begin.png](https://commons.wikimedia.org/wiki/File:Battle_Of_K%C3%B6nigsberg_Begin.png) — CC BY-SA 3.0 — Matthead
+- **koenigsberg** — [Уличный_бой_в_Кенигсберге.jpg](https://commons.wikimedia.org/wiki/File:%D0%A3%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B9_%D0%B1%D0%BE%D0%B9_%D0%B2_%D0%9A%D0%B5%D0%BD%D0%B8%D0%B3%D1%81%D0%B1%D0%B5%D1%80%D0%B3%D0%B5.jpg) — Public domain — Dmitry Chernov
 - **warsaw-uprising** — [Warsaw_Uprising.png](https://commons.wikimedia.org/wiki/File:Warsaw_Uprising.png) — CC BY-SA 4.0 — PattyB0YY
 - **lvov** — [T34_a_Leopoli_27_luglio_1944.png](https://commons.wikimedia.org/wiki/File:T34_a_Leopoli_27_luglio_1944.png) — Public domain — Unknown authorUnknown author
-- **jassy-kishinev** — [Eastern_Front_1943-08_to_1944-12.png](https://commons.wikimedia.org/wiki/File:Eastern_Front_1943-08_to_1944-12.png) — CC BY-SA 3.0 — Drawn by GdrModified by Zocky, Mahahahaneapneap, Julieta39, Claude Zygiel
+- **jassy-kishinev** — [Bundesarchiv_Bild_101I-244-2321-34,_Ostfront-Süd,_Panzer_V_(Panther).jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-244-2321-34,_Ostfront-S%C3%BCd,_Panzer_V_(Panther).jpg) — CC BY-SA 3.0 de — Waidelich
 - **odessa** — [Bundesarchiv_B_145_Bild-F016206-0003,_Russland,_Deportation_von_Juden.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_B_145_Bild-F016206-0003,_Russland,_Deportation_von_Juden.jpg) — CC BY-SA 3.0 de — Unknown authorUnknown author
 - **caucasus** — [Czołgi_niemieckie_w_szyku_bojowym_w_dolinie_górskiej_na_Kaukazie_(2-821).jpg](https://commons.wikimedia.org/wiki/File:Czo%C5%82gi_niemieckie_w_szyku_bojowym_w_dolinie_g%C3%B3rskiej_na_Kaukazie_(2-821).jpg) — Public domain — Pisterius
 - **dnieper** — [Hitlerdnieper.jpg](https://commons.wikimedia.org/wiki/File:Hitlerdnieper.jpg) — Public domain — The original uploader was Ghirlandajo at English Wikipedia.
@@ -53,14 +53,14 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **bataan** — [JapaneseTroopsBataan1942.jpg](https://commons.wikimedia.org/wiki/File:JapaneseTroopsBataan1942.jpg) — Public domain — Japanese photograph
 - **manila** — [Manila_Walled_City_Destruction_May_1945.jpg](https://commons.wikimedia.org/wiki/File:Manila_Walled_City_Destruction_May_1945.jpg) — Public domain — Unknown photographer
 - **milne-bay** — [Australian_troops_at_Milne_Bay.jpg](https://commons.wikimedia.org/wiki/File:Australian_troops_at_Milne_Bay.jpg) — Public domain — Bagnall, Frank N
-- **kokoda-track** — [New_guinea_kokoda.PNG](https://commons.wikimedia.org/wiki/File:New_guinea_kokoda.PNG) — CC BY-SA 3.0 — unknown
+- **kokoda-track** — [AWM_027054_16th_Brigade_moving_along_track.jpg](https://commons.wikimedia.org/wiki/File:AWM_027054_16th_Brigade_moving_along_track.jpg) — CC0 — Australian War Memorial collection
 - **buna-gona** — [Wounded_Australian_soldier_led_by_a_Papuan_orderly_at_Buna.jpg](https://commons.wikimedia.org/wiki/File:Wounded_Australian_soldier_led_by_a_Papuan_orderly_at_Buna.jpg) — Public domain — George Silk
 - **rabaul** — [Australian_troops_retreating_from_the_Battle_of_Rabaul_after_the_successful_attack_by_Japanese_forces,_Warangoi_River,_New_Britain,_January_1942._(39799822625).jpg](https://commons.wikimedia.org/wiki/File:Australian_troops_retreating_from_the_Battle_of_Rabaul_after_the_successful_attack_by_Japanese_forces,_Warangoi_River,_New_Britain,_January_1942._(39799822625).jpg) — CC BY 2.0 — Cassowary Colorizations
 - **bougainville** — [U.S._Soldiers_at_Bougainville_(Solomon_Islands)_March_1944.jpg](https://commons.wikimedia.org/wiki/File:U.S._Soldiers_at_Bougainville_(Solomon_Islands)_March_1944.jpg) — Public domain — U.S. Army
 - **bismarck-sea** — [Japanese_transport_under_attack_during_the_Battle_of_the_Bismarck_Sea,_3_March_1943_(128159).jpg](https://commons.wikimedia.org/wiki/File:Japanese_transport_under_attack_during_the_Battle_of_the_Bismarck_Sea,_3_March_1943_(128159).jpg) — Public domain — Australian armed forces
 - **attu** — [Mortar-attu-1943.jpg](https://commons.wikimedia.org/wiki/File:Mortar-attu-1943.jpg) — Public domain — unknown (U.S. Navy)
 - **darwin** — [Darwin_42.jpg](https://commons.wikimedia.org/wiki/File:Darwin_42.jpg) — Public domain — RAN Historical Collection
-- **java-sea** — [USA-C-EIndies-5.jpg](https://commons.wikimedia.org/wiki/File:USA-C-EIndies-5.jpg) — Public domain — unknown
+- **java-sea** — [Exeter_sinking.jpg](https://commons.wikimedia.org/wiki/File:Exeter_sinking.jpg) — Public domain — Photo taken from a Japanese aircraft
 - **eniwetok** — [Landing_craft_approaching_Eniwetok_on_19_February_1944.jpg](https://commons.wikimedia.org/wiki/File:Landing_craft_approaching_Eniwetok_on_19_February_1944.jpg) — Public domain — U.S. Army
 - **kwajalein** — [Men_of_the_7th_Div_HD-SN-99-02846.jpg](https://commons.wikimedia.org/wiki/File:Men_of_the_7th_Div_HD-SN-99-02846.jpg) — Public domain — CORDRAY
 - **normandy** — [Into_the_Jaws_of_Death_23-0455M_edit.jpg](https://commons.wikimedia.org/wiki/File:Into_the_Jaws_of_Death_23-0455M_edit.jpg) — Public domain — Chief Photographer's Mate (CPHoM) Robert F. Sargent
@@ -82,7 +82,7 @@ Post-Work: User:W.wolny
 - **ruhr-pocket** — [Remagen_enclosure.jpg](https://commons.wikimedia.org/wiki/File:Remagen_enclosure.jpg) — Public domain — Unknown authorUnknown author
 - **paris** — [Crowds_of_French_patriots_line_the_Champs_Elysees-edit2.jpg](https://commons.wikimedia.org/wiki/File:Crowds_of_French_patriots_line_the_Champs_Elysees-edit2.jpg) — Public domain — Jack Downey, U.S. Office of War Information
 - **operation-dragoon** — [Operation_Dragoon_invasion_fleet_1944.jpg](https://commons.wikimedia.org/wiki/File:Operation_Dragoon_invasion_fleet_1944.jpg) — Public domain — USN
-- **cherbourg** — [Cotentin_Peninsula.jpg](https://commons.wikimedia.org/wiki/File:Cotentin_Peninsula.jpg) — Public domain — Historical Division, Department of the Army
+- **cherbourg** — [Cherbourg1944-Combat_avParis.jpg](https://commons.wikimedia.org/wiki/File:Cherbourg1944-Combat_avParis.jpg) — Public domain — US Army Signal Corps, per the stamp at the lower left
 - **scheldt** — [Acrossthescheldt.jpg](https://commons.wikimedia.org/wiki/File:Acrossthescheldt.jpg) — Public domain — Donald I. Grant (Dept. of National Defence)
 - **metz** — [Metz1944-1.jpg](https://commons.wikimedia.org/wiki/File:Metz1944-1.jpg) — Public domain — unknown
 - **el-alamein** — [1stAlameinBritDefense.jpg](https://commons.wikimedia.org/wiki/File:1stAlameinBritDefense.jpg) — Public domain — Fox (Sgt), No 1 Army Film &amp; Photographic Unit
@@ -103,7 +103,7 @@ Post-Work: User:W.wolny
 - **salerno** — [Luccaitaly1944.png](https://commons.wikimedia.org/wiki/File:Luccaitaly1944.png) — Public domain — Department of Defense. Department of the Army. Office of the Chief Signal Officer.
 - **anzio** — [USS_Coral_Sea_(CVE-57)_1943-1944.jpg](https://commons.wikimedia.org/wiki/File:USS_Coral_Sea_(CVE-57)_1943-1944.jpg) — Public domain — U.S. Navy
 - **monte-cassino** — [Cassino008.jpg](https://commons.wikimedia.org/wiki/File:Cassino008.jpg) — Public domain — Unknown authorUnknown author
-- **gothic-line** — [WWII51_Gothic_Line.jpg](https://commons.wikimedia.org/wiki/File:WWII51_Gothic_Line.jpg) — Public domain — The History Department of the United States Military Academy
+- **gothic-line** — [The_British_Army_in_Italy_1944_NA18091.jpg](https://commons.wikimedia.org/wiki/File:The_British_Army_in_Italy_1944_NA18091.jpg) — Public domain — Lupson (Sgt), No 2 Army Film &amp; Photographic Unit
 - **greece** — [Thermopylae_under_German_control,_1941.jpg](https://commons.wikimedia.org/wiki/File:Thermopylae_under_German_control,_1941.jpg) — Public domain — Unknown authorUnknown author
 - **mers-el-kebir** — [Croiseur_de_bataille_Strasbourg_03-07-1940.jpg](https://commons.wikimedia.org/wiki/File:Croiseur_de_bataille_Strasbourg_03-07-1940.jpg) — CC BY-SA 3.0 — Jacques Mulard
 - **kohima** — [IND_003698_Garrison_Hill_Kohima.jpg](https://commons.wikimedia.org/wiki/File:IND_003698_Garrison_Hill_Kohima.jpg) — Public domain — Official photographer of No.9 Army Film and Photographic Unit.
@@ -116,7 +116,7 @@ Post-Work: User:W.wolny
 - **changsha** — [Type_92_Heavy_Machine_Gun2.jpg](https://commons.wikimedia.org/wiki/File:Type_92_Heavy_Machine_Gun2.jpg) — Public domain — Unknown authorUnknown author
 - **hengyang** — [Battle_of_Changsha_(1944).jpg](https://commons.wikimedia.org/wiki/File:Battle_of_Changsha_(1944).jpg) — Public domain — Imperial Japanese Army
 - **kunlun-pass** — [A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg](https://commons.wikimedia.org/wiki/File:A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg) — Public domain — Unknown authorUnknown author
-- **yenangyaung** — [Japanese_Conquest_of_Burma_April-May_1942.jpg](https://commons.wikimedia.org/wiki/File:Japanese_Conquest_of_Burma_April-May_1942.jpg) — Public domain — U.S. Army Center of Military History
+- **yenangyaung** — [British_troops_destroy_equipment_and_machinery_at_the_Yenangyaung_oilfields_in_Burma_before_retreating,_16_April_1942._IND989.jpg](https://commons.wikimedia.org/wiki/File:British_troops_destroy_equipment_and_machinery_at_the_Yenangyaung_oilfields_in_Burma_before_retreating,_16_April_1942._IND989.jpg) — Public domain — No 9 Army Film &amp; Photographic Unit
 - **meiktila** — [SE_003071_Shermans_driving_on_Meiktila.jpg](https://commons.wikimedia.org/wiki/File:SE_003071_Shermans_driving_on_Meiktila.jpg) — Public domain — Sergeant R Stubbs, No.9 Army Film and Photographic Unit.
 - **admin-box** — [Arakan_Campaign_Indian_Division_at_observation.jpg](https://commons.wikimedia.org/wiki/File:Arakan_Campaign_Indian_Division_at_observation.jpg) — Public domain — No 9 Army Film &amp; Photographic Unit
 - **khalkhin-gol** — [Japanese_soldiers_creeping_in_front_of_wrecked_Soviet_tanks.jpg](https://commons.wikimedia.org/wiki/File:Japanese_soldiers_creeping_in_front_of_wrecked_Soviet_tanks.jpg) — Public domain — Dōmei Tsushin
