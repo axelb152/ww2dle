@@ -19,7 +19,7 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **narva** — [Narva_1944.jpg](https://commons.wikimedia.org/wiki/File:Narva_1944.jpg) — Public domain — Unknown authorUnknown author
 - **rostov** — [Battle_of_Rostov.jpeg](https://commons.wikimedia.org/wiki/File:Battle_of_Rostov.jpeg) — Public domain — author unknown
 - **debrecen** — [Bundesarchiv_Bild_101I-244-2324-09,_Ungarn,_Debrecen,_Panzer_V_"Panther".jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-244-2324-09,_Ungarn,_Debrecen,_Panzer_V_%22Panther%22.jpg) — CC BY-SA 3.0 de — Momber
-- **budapest** — [A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg](https://commons.wikimedia.org/wiki/File:A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg) — Public domain — Unknown authorUnknown author
+- **budapest** — [Bundesarchiv_Bild_101I-680-8282A-12A,_Budapest,_SS-Männer_auf_der_Burg.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-680-8282A-12A,_Budapest,_SS-M%C3%A4nner_auf_der_Burg.jpg) — CC BY-SA 3.0 de — Faupel
 - **vienna-offensive** — [Vienna_Operations.jpg](https://commons.wikimedia.org/wiki/File:Vienna_Operations.jpg) — Public domain — A. Grigoryev
 - **berlin** — [Raising_a_flag_over_the_Reichstag_-_Restoration.jpg](https://commons.wikimedia.org/wiki/File:Raising_a_flag_over_the_Reichstag_-_Restoration.jpg) — Public domain — Yevgeny Khaldei / Adam Cuerden
 - **seelow-heights** — [Gedenkstätte_Seelower_Höhen_Blick_ins_Oderbruch.JPG](https://commons.wikimedia.org/wiki/File:Gedenkst%C3%A4tte_Seelower_H%C3%B6hen_Blick_ins_Oderbruch.JPG) — CC BY-SA 3.0 — Assenmacher
@@ -65,7 +65,7 @@ All battle photos are from Wikimedia Commons. Per-file source and license:
 - **kwajalein** — [Men_of_the_7th_Div_HD-SN-99-02846.jpg](https://commons.wikimedia.org/wiki/File:Men_of_the_7th_Div_HD-SN-99-02846.jpg) — Public domain — CORDRAY
 - **normandy** — [Into_the_Jaws_of_Death_23-0455M_edit.jpg](https://commons.wikimedia.org/wiki/File:Into_the_Jaws_of_Death_23-0455M_edit.jpg) — Public domain — Chief Photographer's Mate (CPHoM) Robert F. Sargent
 - **dunkirk** — [Soldados_británicos_en_Dunkerque_en_1940.jpg](https://commons.wikimedia.org/wiki/File:Soldados_brit%C3%A1nicos_en_Dunkerque_en_1940.jpg) — Public domain — Unknown authorUnknown author
-- **battle-of-britain** — [A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg](https://commons.wikimedia.org/wiki/File:A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg) — Public domain — Unknown authorUnknown author
+- **battle-of-britain** — [Spitfire_and_He_111_during_Battle_of_Britain_1940.jpg](https://commons.wikimedia.org/wiki/File:Spitfire_and_He_111_during_Battle_of_Britain_1940.jpg) — Public domain — Australian armed forces
 - **sedan** — [Bundesarchiv_Bild_146-1978-062-24,_Floing,_Pontonbrücke_über_die_Maas.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_146-1978-062-24,_Floing,_Pontonbr%C3%BCcke_%C3%BCber_die_Maas.jpg) — CC BY-SA 3.0 de — Unknown authorUnknown author
 - **eben-emael** — [Kasematte_Maastricht_2.jpg](https://commons.wikimedia.org/wiki/File:Kasematte_Maastricht_2.jpg) — CC BY-SA 3.0 — Scargill
 - **dieppe** — [Bundesarchiv_Bild_101I-362-2211-04,_Dieppe,_Landungsversuch,_englischer_Spähpanzer.jpg](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_101I-362-2211-04,_Dieppe,_Landungsversuch,_englischer_Sp%C3%A4hpanzer.jpg) — CC BY-SA 3.0 de — Jörgensen
@@ -108,14 +108,16 @@ Post-Work: User:W.wolny
 - **mers-el-kebir** — [Croiseur_de_bataille_Strasbourg_03-07-1940.jpg](https://commons.wikimedia.org/wiki/File:Croiseur_de_bataille_Strasbourg_03-07-1940.jpg) — CC BY-SA 3.0 — Jacques Mulard
 - **kohima** — [IND_003698_Garrison_Hill_Kohima.jpg](https://commons.wikimedia.org/wiki/File:IND_003698_Garrison_Hill_Kohima.jpg) — Public domain — Official photographer of No.9 Army Film and Photographic Unit.
 - **imphal** — [Gurkhas_advancing_with_Lee_tanks_to_clear_the_Japanese_from_Imphal-Kohima_road.jpg](https://commons.wikimedia.org/wiki/File:Gurkhas_advancing_with_Lee_tanks_to_clear_the_Japanese_from_Imphal-Kohima_road.jpg) — Public domain — British Information Service, information service operated by UK government during WW2.
-- **singapore** — [A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg](https://commons.wikimedia.org/wiki/File:A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg) — Public domain — Unknown authorUnknown author
+- **singapore** — [Surrender_Singapore.jpg](https://commons.wikimedia.org/wiki/File:Surrender_Singapore.jpg) — Public domain — Photographer not identified. "Official photograph".
+
+Post-Work: User:W.wolny
 - **hong-kong** — [Battle_of_HK_03.jpg](https://commons.wikimedia.org/wiki/File:Battle_of_HK_03.jpg) — Public domain — Mainichi Newpaper, Japan
 - **slim-river** — [Newly-arrived_Indian_troops.jpg](https://commons.wikimedia.org/wiki/File:Newly-arrived_Indian_troops.jpg) — Public domain — Palmer (Lt)
 
 Post-Work: User:W.wolny
 - **changsha** — [Type_92_Heavy_Machine_Gun2.jpg](https://commons.wikimedia.org/wiki/File:Type_92_Heavy_Machine_Gun2.jpg) — Public domain — Unknown authorUnknown author
 - **hengyang** — [Battle_of_Changsha_(1944).jpg](https://commons.wikimedia.org/wiki/File:Battle_of_Changsha_(1944).jpg) — Public domain — Imperial Japanese Army
-- **kunlun-pass** — [A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg](https://commons.wikimedia.org/wiki/File:A_heavy_explosion_on_board_USS_Lexington_(CV-2)_blows_an_aircraft_over_her_side,_8_May_1942_(80-G-7413).jpg) — Public domain — Unknown authorUnknown author
+- **kunlun-pass** — [Li_Jishen,_Chen_Cheng,_Zhang_Fakui,_and_other_ROC_commanders_at_the_Battle_of_South_Guangxi.jpg](https://commons.wikimedia.org/wiki/File:Li_Jishen,_Chen_Cheng,_Zhang_Fakui,_and_other_ROC_commanders_at_the_Battle_of_South_Guangxi.jpg) — Public domain — Unknown authorUnknown author
 - **yenangyaung** — [British_troops_destroy_equipment_and_machinery_at_the_Yenangyaung_oilfields_in_Burma_before_retreating,_16_April_1942._IND989.jpg](https://commons.wikimedia.org/wiki/File:British_troops_destroy_equipment_and_machinery_at_the_Yenangyaung_oilfields_in_Burma_before_retreating,_16_April_1942._IND989.jpg) — Public domain — No 9 Army Film &amp; Photographic Unit
 - **meiktila** — [SE_003071_Shermans_driving_on_Meiktila.jpg](https://commons.wikimedia.org/wiki/File:SE_003071_Shermans_driving_on_Meiktila.jpg) — Public domain — Sergeant R Stubbs, No.9 Army Film and Photographic Unit.
 - **admin-box** — [Arakan_Campaign_Indian_Division_at_observation.jpg](https://commons.wikimedia.org/wiki/File:Arakan_Campaign_Indian_Division_at_observation.jpg) — Public domain — No 9 Army Film &amp; Photographic Unit
