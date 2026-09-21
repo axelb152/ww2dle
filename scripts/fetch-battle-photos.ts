@@ -47,6 +47,10 @@ const ARTICLE_OVERRIDES: Record<string, string> = {
   "kunlun-pass": "Battle of Kunlun Pass",
   leningrad: "Siege of Leningrad",
   singapore: "Fall of Singapore",
+  // English Wikipedia files the Novorossiysk beachhead under its Russian name
+  // rather than the city's, so searching "Battle of Novorossiysk 1943" only
+  // ever reaches Battle of the Caucasus.
+  novorossiysk: "Malaya Zemlya",
 };
 // Hand-picked Commons files where automatic selection returns a memorial or
 // map instead of a wartime photo.
@@ -100,9 +104,12 @@ const FILE_OVERRIDES: Record<string, string> = {
     "Li_Jishen,_Chen_Cheng,_Zhang_Fakui,_and_other_ROC_commanders_at_the_Battle_of_South_Guangxi.jpg",
   leningrad: "Anti_aircraft_Leningrad_1941.JPG",
   singapore: "Surrender_Singapore.jpg",
+  // Commons titles this one in Russian ("Novorossiysk after liberation"), so
+  // neither the article's lead image nor an English file search reaches it.
+  novorossiysk: "Новороссийск после освобождения.jpg",
 };
 // No usable wartime photo on Commons: these keep the map silhouette.
-const NO_PHOTO = new Set(["novorossiysk"]);
+const NO_PHOTO = new Set<string>();
 
 interface PhotoResult {
   code: string;
