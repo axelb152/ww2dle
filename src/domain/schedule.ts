@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import seedrandom from "seedrandom";
-import { Battle, battlesWithImage } from "./battles";
+import { Battle, battles } from "./battles";
 
 export const START_DATE = DateTime.fromISO("2026-08-01");
 
@@ -35,7 +35,7 @@ export const forcedBattles: Record<string, string> = {
 
 // One cycle deals every battle exactly once, so nothing repeats until the whole
 // dataset has been played.
-export const CYCLE_LENGTH = battlesWithImage.length;
+export const CYCLE_LENGTH = battles.length;
 
 // alea barely mixes its seed, so "2026-09-21" and "2026-09-22" produced
 // near-identical first draws — which is why the same battle was served four
@@ -65,7 +65,7 @@ function deckForCycle(cycleIndex: number): Battle[] {
   }
 
   const random = seededRandom(`cycle-${cycleIndex}`);
-  const deck = battlesWithImage.slice();
+  const deck = battles.slice();
 
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(random() * (i + 1));
