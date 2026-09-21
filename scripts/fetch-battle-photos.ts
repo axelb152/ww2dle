@@ -28,13 +28,25 @@ const THUMB_WIDTH = 800;
 // flags are allowed (Raising the Flag on Iwo Jima is a photo).
 const NOT_A_PHOTO =
   /map|karte|carte|diagram|situation|plan(?!e)|emblem|insignia|logo|coat_of_arms|locat|\.svg$|\.gif$/i;
-// Search results that are about the battle's media echo, not the battle.
-const NOT_AN_ARTICLE = /\bfilm\b|miniseries|video game|novel|painting|album/i;
+// Search results that are about the battle's media echo, not the battle, or
+// that are index pages rather than a battle at all. Without the index guard a
+// search can resolve to "List of World War II battles", whose lead image then
+// becomes the "photo" for every battle that landed there.
+const NOT_AN_ARTICLE =
+  /\bfilm\b|miniseries|video game|novel|painting|album|^list of|^timeline of|^outline of/i;
 // Battles whose search resolves to the wrong article.
 const ARTICLE_OVERRIDES: Record<string, string> = {
   arnhem: "Battle of Arnhem",
   "tali-ihantala": "Battle of Tali-Ihantala",
   guam: "Battle of Guam (1944)",
+  // These five all resolved to "List of World War II battles" and so shared
+  // that index page's lead image. The search query alone does not reach the
+  // right article for them even with the index guard above, so pin the title.
+  "battle-of-britain": "Battle of Britain",
+  budapest: "Siege of Budapest",
+  "kunlun-pass": "Battle of Kunlun Pass",
+  leningrad: "Siege of Leningrad",
+  singapore: "Fall of Singapore",
 };
 // Hand-picked Commons files where automatic selection returns a memorial or
 // map instead of a wartime photo.
@@ -78,6 +90,16 @@ const FILE_OVERRIDES: Record<string, string> = {
   // The article's infobox leads with a map of the Japanese conquest of Burma, not a photo.
   yenangyaung:
     "British_troops_destroy_equipment_and_machinery_at_the_Yenangyaung_oilfields_in_Burma_before_retreating,_16_April_1942._IND989.jpg",
+  // These five shared one photo: their article search resolved to
+  // "List of World War II battles" and took its lead image. Pin the
+  // right file as well as the right article, above.
+  "battle-of-britain": "Spitfire_and_He_111_during_Battle_of_Britain_1940.jpg",
+  budapest:
+    "Bundesarchiv_Bild_101I-680-8282A-12A,_Budapest,_SS-Männer_auf_der_Burg.jpg",
+  "kunlun-pass":
+    "Li_Jishen,_Chen_Cheng,_Zhang_Fakui,_and_other_ROC_commanders_at_the_Battle_of_South_Guangxi.jpg",
+  leningrad: "Anti_aircraft_Leningrad_1941.JPG",
+  singapore: "Surrender_Singapore.jpg",
 };
 // No usable wartime photo on Commons: these keep the map silhouette.
 const NO_PHOTO = new Set(["novorossiysk"]);
