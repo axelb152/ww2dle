@@ -9,14 +9,28 @@ import {
   MAX_MEMBERS,
   monthsOf,
   parseShareResult,
+  ranksOf,
   Standing,
   standings,
+  summarize,
 } from "../../domain/leagues";
 import { Guess } from "../../domain/guess";
 import { UseLeagues } from "../../hooks/useLeagues";
 import { Panel } from "./Panel";
 
 const MAX_TRY_COUNT = 6;
+
+// The app has no token layer, so these four strings are it. Keeping them in one
+// place is what stops the panel drifting from the guess grid's vocabulary:
+// 2px square borders, red-600 for primary/rank state, slate in dark mode.
+const FOCUS =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900";
+// opacity-60 put small text under 4.5:1 on both themes; name the colour instead.
+const MUTED = "text-gray-600 dark:text-slate-400";
+const LABEL = `text-[11px] font-semibold uppercase tracking-wide ${MUTED}`;
+const BTN = `border-2 px-3 py-2 font-bold uppercase tracking-wide transition-colors hover:bg-gray-100 dark:hover:bg-slate-800 ${FOCUS}`;
+const BTN_PRIMARY = `border-2 border-red-600 bg-red-600 px-3 py-2 font-bold uppercase tracking-wide text-white transition-colors hover:bg-red-500 disabled:border-gray-300 disabled:bg-gray-200 disabled:text-gray-600 disabled:hover:bg-gray-200 dark:disabled:border-slate-700 dark:disabled:bg-slate-800 dark:disabled:text-slate-400 dark:disabled:hover:bg-slate-800 ${FOCUS}`;
+const FIELD = `w-full border-2 px-2 py-2 placeholder:text-gray-500 dark:bg-slate-800 dark:placeholder:text-slate-400 ${FOCUS}`;
 
 // Today's own result, read straight from the game's localStorage — no prop
 // threading needed. Null unless today's game is actually over: a half-played
@@ -43,27 +57,42 @@ function todayNumber(): number {
   return dayNumber(DateTime.now().toFormat("yyyy-MM-dd"));
 }
 
+// Daily podium places as a medal ribbon. One graphic to screen readers, not a
+// stream of "first place medal, second place medal, …".
 function Places({ places }: { places: number[] }) {
+  const { t } = useTranslation();
   const shown = places.slice(0, 5);
+  const rest = places.length - shown.length;
   return (
-    <span className="whitespace-nowrap">
-      {shown.map((place, i) => (
-        <span key={i}>{RANK_MEDALS[place - 1]}</span>
-      ))}
-      {places.length > shown.length && (
-        <span className="opacity-60" title={`${places.length}`}>
-          …
+    <span
+      role="img"
+      aria-label={`${t("leagues.medalsLabel")}: ${places.length}`}
+      className="flex items-center gap-1 text-sm leading-none"
+    >
+      {/* The medals truncate under pressure; the count is what you actually
+          read, so it sits outside them and never shrinks. */}
+      <span aria-hidden="true" className="truncate">
+        {shown.map((place, i) => (
+          <span key={i}>{RANK_MEDALS[place - 1]}</span>
+        ))}
+      </span>
+      {rest > 0 && (
+        <span aria-hidden="true" className={`shrink-0 text-xs ${MUTED}`}>
+          +{rest}
         </span>
       )}
     </span>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+// One cell of a divided stat strip. Not a card — four bordered boxes inside a
+// bordered card is nesting, so the strip carries a single top border and
+// vertical dividers instead.
+function StatCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-2 px-1 py-1 text-center">
-      <div className="text-[10px] uppercase opacity-60">{label}</div>
-      <div className="font-bold">{value}</div>
+    <div className="px-1 text-center">
+      <div className={LABEL}>{label}</div>
+      <div className="text-base font-bold tabular-nums">{value}</div>
     </div>
   );
 }
@@ -80,49 +109,140 @@ function MemberCard({
   const { t } = useTranslation();
   const { member, total, daysPlayed, wins, avgGuesses, streak, today, places } =
     standing;
+  const leader = rank === 1;
 
   return (
-    <li className="border-2 p-2">
-      <div className="flex items-baseline gap-2">
-        <span className="w-10 shrink-0">
-          {RANK_MEDALS[rank - 1] ?? ""}#{rank}
-        </span>
-        <span className="font-bold truncate">{member}</span>
-        <Places places={places} />
-        <span className="ml-auto text-right shrink-0">
-          {today != null && (
-            <span className="text-green-600 text-xs mr-1">+{today}</span>
-          )}
-          <span className="text-xl font-bold">{total}</span>
-          <span className="text-[10px] uppercase opacity-60">
-            {" "}
-            {t("leagues.pts")}
+    <li
+      className={`animate-reveal border-2 p-2 ${
+        leader ? "border-red-600" : ""
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        <span className="flex w-[3.25rem] shrink-0 items-center gap-1">
+          <span
+            aria-hidden="true"
+            className="w-5 text-center text-base leading-none"
+          >
+            {RANK_MEDALS[rank - 1] ?? ""}
           </span>
+          <span className="text-xs font-bold tabular-nums">#{rank}</span>
+        </span>
+        <span
+          aria-hidden="true"
+          className={`grid h-9 w-9 shrink-0 place-items-center border-2 text-base font-bold uppercase ${
+            leader
+              ? "border-red-600 bg-red-600 text-white"
+              : "bg-gray-100 dark:bg-slate-800"
+          }`}
+        >
+          {(Array.from(member)[0] ?? "?").toUpperCase()}
+        </span>
+        <span className="min-w-0 flex-auto overflow-hidden">
+          <span className="block truncate font-bold">{member}</span>
+        </span>
+        <span className="shrink-0 pl-1 text-right leading-none">
+          {today != null && (
+            <span className="animate-pop block text-xs font-bold text-green-700 dark:text-green-400">
+              +{today}
+            </span>
+          )}
+          <span className="text-2xl font-bold tabular-nums">{total}</span>
+          <span className={`block ${LABEL}`}>{t("leagues.pts")}</span>
         </span>
         <button
           type="button"
-          className="shrink-0"
+          className={`-my-1 grid h-10 w-10 shrink-0 place-items-center text-sm opacity-70 transition-opacity hover:opacity-100 ${FOCUS}`}
           title={t("leagues.removeMember")}
+          aria-label={`${t("leagues.removeMember")}: ${member}`}
           onClick={onRemove}
         >
-          ✖️
+          ✕
         </button>
       </div>
-      <div className="grid grid-cols-4 gap-1 mt-2">
-        <Stat
+      {places.length > 0 && (
+        <div className="mt-1">
+          <Places places={places} />
+        </div>
+      )}
+      <div className="mt-2 grid grid-cols-4 divide-x-2 border-t-2 pt-2">
+        <StatCell
           label={t("leagues.win")}
           value={
             daysPlayed === 0 ? "–" : `${Math.round((100 * wins) / daysPlayed)}%`
           }
         />
-        <Stat label={t("leagues.games")} value={String(daysPlayed)} />
-        <Stat label={t("leagues.streak")} value={String(streak)} />
-        <Stat
+        <StatCell label={t("leagues.games")} value={String(daysPlayed)} />
+        <StatCell label={t("leagues.streak")} value={String(streak)} />
+        <StatCell
           label={t("leagues.avg")}
           value={avgGuesses == null ? "–" : avgGuesses.toFixed(1)}
         />
       </div>
     </li>
+  );
+}
+
+// Roster capacity + the invite action, which is the only thing you can do about
+// an under-filled league. scaleX rather than width so the fill doesn't animate
+// layout.
+function InviteCard({
+  used,
+  max,
+  onShare,
+}: {
+  used: number;
+  max: number;
+  onShare: () => void;
+}) {
+  const { t } = useTranslation();
+  const left = max - used;
+  const filled = Math.min(1, used / max);
+  const percent = Math.round(100 * filled);
+
+  return (
+    <section className="space-y-2 border-2 p-3">
+      <h4 className="font-bold uppercase tracking-wide">
+        👥 {t("leagues.invite")}
+      </h4>
+      <p className={`text-pretty text-xs ${MUTED}`}>
+        {used === 0
+          ? t("leagues.inviteFirst")
+          : left > 0
+          ? t("leagues.spotsLeft", { n: left, max })
+          : t("leagues.isFull")}
+      </p>
+      <div className="flex items-baseline justify-between text-xs font-bold">
+        <span className="tabular-nums">
+          {used}/{max} {t("leagues.playersLabel")}
+        </span>
+        <span className={`tabular-nums ${MUTED}`}>
+          {t("leagues.percentFull", { percent })}
+        </span>
+      </div>
+      <div
+        role="progressbar"
+        aria-label={t("leagues.capacityLabel")}
+        aria-valuenow={used}
+        aria-valuemin={0}
+        aria-valuemax={max}
+        className="h-3 overflow-hidden border-2 bg-gray-100 dark:bg-slate-800"
+      >
+        <div
+          className="h-full origin-left bg-red-600 transition-transform duration-500 ease-out"
+          style={{ transform: `scaleX(${filled})` }}
+        />
+      </div>
+      <button
+        type="button"
+        className={`w-full border-gray-900 dark:border-slate-100 ${BTN}`}
+        onClick={onShare}
+      >
+        🔗 {t("leagues.share")}
+      </button>
+      <p className={`text-pretty text-[11px] ${MUTED}`}>
+        {t("leagues.shareHint")}
+      </p>
+    </section>
   );
 }
 
@@ -186,28 +306,47 @@ export function Leagues({
     navigator.clipboard.writeText(url).then(() => toast(t("leagues.copied")));
   };
 
+  const rows =
+    league == null
+      ? []
+      : standings(league, {
+          month: month ?? undefined,
+          today: todayNumber(),
+        });
+  const totals = summarize(rows);
+  const ranks = ranksOf(rows);
+
   return (
     <Panel title={t("leagues.title")} isOpen={isOpen} close={close}>
       {league == null ? (
         <div className="my-4 space-y-4">
-          <p className="text-sm opacity-80">{t("leagues.intro")}</p>
-          <ul className="space-y-1">
+          <p className={MUTED}>{t("leagues.intro")}</p>
+          <ul className="space-y-2">
             {leagues.map((l) => (
-              <li key={l.id} className="flex items-center">
+              <li key={l.id} className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="flex-auto text-left border-2 px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  className={`flex min-w-0 flex-auto items-center gap-2 border-2 p-2 text-left transition-colors hover:bg-gray-100 dark:hover:bg-slate-800 ${FOCUS}`}
                   onClick={() => setOpenId(l.id)}
                 >
-                  {l.emoji || "🏆"} {l.name}{" "}
-                  <span className="opacity-60">
-                    ({l.members.length}/{MAX_MEMBERS} {t("leagues.members")})
+                  <span
+                    aria-hidden="true"
+                    className="grid h-9 w-9 shrink-0 place-items-center border-2 bg-gray-100 text-base dark:bg-slate-800"
+                  >
+                    {l.emoji || "🏆"}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate font-bold">{l.name}</span>
+                    <span className={`block ${LABEL}`}>
+                      {l.members.length}/{MAX_MEMBERS} {t("leagues.members")}
+                    </span>
                   </span>
                 </button>
                 <button
                   type="button"
-                  className="ml-2 px-2"
+                  className={`grid h-11 w-11 shrink-0 place-items-center opacity-60 transition-opacity hover:opacity-100 ${FOCUS}`}
                   title={t("leagues.delete")}
+                  aria-label={`${t("leagues.delete")}: ${l.name}`}
                   onClick={() => {
                     if (
                       window.confirm(
@@ -223,11 +362,13 @@ export function Leagues({
               </li>
             ))}
             {leagues.length === 0 && (
-              <li className="opacity-60">{t("leagues.empty")}</li>
+              <li className={`border-2 border-dashed p-4 text-center ${MUTED}`}>
+                {t("leagues.empty")}
+              </li>
             )}
           </ul>
           <form
-            className="flex gap-2"
+            className="flex gap-2 border-t-2 pt-4"
             onSubmit={(e) => {
               e.preventDefault();
               if (newName.trim()) {
@@ -240,23 +381,22 @@ export function Leagues({
             }}
           >
             <input
-              className="w-10 border-2 px-1 py-1 text-center dark:bg-slate-800"
+              className={`w-12 shrink-0 border-2 px-1 py-2 text-center dark:bg-slate-800 ${FOCUS}`}
               maxLength={2}
               placeholder="🏆"
               title={t("leagues.emoji")}
+              aria-label={t("leagues.emoji")}
               value={newEmoji}
               onChange={(e) => setNewEmoji(e.target.value)}
             />
             <input
-              className="flex-auto border-2 px-2 py-1 dark:bg-slate-800"
+              className={FIELD}
               placeholder={t("leagues.namePlaceholder")}
+              aria-label={t("leagues.namePlaceholder")}
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
-            <button
-              type="submit"
-              className="border-2 px-3 uppercase bg-red-600 hover:bg-red-500 text-white"
-            >
+            <button type="submit" className={`shrink-0 ${BTN_PRIMARY}`}>
               {t("leagues.create")}
             </button>
           </form>
@@ -265,18 +405,29 @@ export function Leagues({
         <div className="my-4 space-y-4">
           <button
             type="button"
-            className="text-sm underline"
+            className={`-m-1 p-1 text-sm font-bold underline ${FOCUS}`}
             onClick={() => setOpenId(null)}
           >
             ← {t("leagues.back")}
           </button>
+          <h3 className="flex items-center gap-2 text-xl font-bold">
+            <span aria-hidden="true">{league.emoji || "🏆"}</span>
+            <span className="min-w-0 truncate">{league.name}</span>
+          </h3>
+
+          <InviteCard
+            used={league.members.length}
+            max={MAX_MEMBERS}
+            onShare={handleShare}
+          />
+
           <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold flex-auto truncate">
-              {league.emoji || "🏆"} {league.name}
-            </h3>
+            <h4 className="flex-auto font-bold uppercase tracking-wide">
+              {t("leagues.membersTitle")}
+            </h4>
             <select
-              className="border-2 px-1 py-1 dark:bg-slate-800"
-              title={t("leagues.month")}
+              className={`shrink-0 border-2 px-2 py-1 text-xs font-bold uppercase tracking-wide dark:bg-slate-800 ${FOCUS}`}
+              aria-label={t("leagues.month")}
               value={month ?? ""}
               onChange={(e) => setMonth(e.target.value || null)}
             >
@@ -288,19 +439,13 @@ export function Leagues({
               ))}
             </select>
           </div>
-          <p className="text-xs opacity-60">
-            {league.members.length}/{MAX_MEMBERS} {t("leagues.members")}
-          </p>
 
           <ul className="space-y-2">
-            {standings(league, {
-              month: month ?? undefined,
-              today: todayNumber(),
-            }).map((standing, i) => (
+            {rows.map((standing, i) => (
               <MemberCard
                 key={standing.member}
                 standing={standing}
-                rank={i + 1}
+                rank={ranks[i]}
                 onRemove={() => {
                   if (
                     window.confirm(
@@ -314,17 +459,39 @@ export function Leagues({
                 }}
               />
             ))}
-            {league.members.length === 0 && (
-              <li className="opacity-60">{t("leagues.noMembers")}</li>
+            {rows.length === 0 && (
+              <li className={`border-2 border-dashed p-4 text-center ${MUTED}`}>
+                {t("leagues.noMembers")}
+              </li>
             )}
           </ul>
 
-          <div className="space-y-2 border-t-2 pt-3">
-            <h4 className="font-bold">{t("leagues.addResult")}</h4>
+          {rows.length > 0 && (
+            <div className="grid grid-cols-3 divide-x-2 border-2 py-2">
+              <StatCell
+                label={t("leagues.totalGames")}
+                value={String(totals.games)}
+              />
+              <StatCell
+                label={t("leagues.points")}
+                value={String(totals.points)}
+              />
+              <StatCell
+                label={t("leagues.bestStreak")}
+                value={String(totals.bestStreak)}
+              />
+            </div>
+          )}
+
+          <div className="space-y-2 border-t-2 pt-4">
+            <h4 className="font-bold uppercase tracking-wide">
+              {t("leagues.addResult")}
+            </h4>
             <input
-              className="w-full border-2 px-2 py-1 dark:bg-slate-800"
+              className={FIELD}
               list="league-members"
               placeholder={t("leagues.memberPlaceholder")}
+              aria-label={t("leagues.memberPlaceholder")}
               value={member}
               onChange={(e) => setMember(e.target.value)}
             />
@@ -334,9 +501,12 @@ export function Leagues({
               ))}
             </datalist>
             <textarea
-              className="w-full border-2 px-2 py-1 dark:bg-slate-800"
+              className={FIELD}
               rows={3}
               placeholder={
+                today ? t("leagues.pasteOrMine") : t("leagues.pasteFriend")
+              }
+              aria-label={
                 today ? t("leagues.pasteOrMine") : t("leagues.pasteFriend")
               }
               value={shareText}
@@ -344,23 +514,12 @@ export function Leagues({
             />
             <button
               type="button"
-              className="border-2 px-3 py-1 uppercase bg-red-600 hover:bg-red-500 text-white disabled:opacity-50"
+              className={`w-full ${BTN_PRIMARY}`}
               disabled={member.trim() === "" || (!shareText.trim() && !today)}
               onClick={handleAdd}
             >
               {shareText.trim() ? t("leagues.add") : t("leagues.addMine")}
             </button>
-          </div>
-
-          <div className="border-t-2 pt-3">
-            <button
-              type="button"
-              className="border-2 px-3 py-1 uppercase w-full"
-              onClick={handleShare}
-            >
-              🔗 {t("leagues.share")}
-            </button>
-            <p className="text-xs opacity-60 mt-1">{t("leagues.shareHint")}</p>
           </div>
         </div>
       )}

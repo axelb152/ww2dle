@@ -180,3 +180,28 @@ export function standings(
     })
     .sort((a, b) => b.total - a.total || a.member.localeCompare(b.member));
 }
+
+export interface LeagueSummary {
+  games: number;
+  points: number;
+  bestStreak: number;
+}
+
+// League-wide totals over already-scoped standings, for the detail header strip.
+export function summarize(rows: Standing[]): LeagueSummary {
+  return {
+    games: rows.reduce((sum, s) => sum + s.daysPlayed, 0),
+    points: rows.reduce((sum, s) => sum + s.total, 0),
+    bestStreak: rows.reduce((best, s) => Math.max(best, s.streak), 0),
+  };
+}
+
+// Overall rank per standing, positionally aligned with the input. Equal totals
+// share a rank and the next distinct total takes the following one (1,1,2), the
+// same dense scheme `placesOn` uses for the daily podium.
+export function ranksOf(rows: Standing[]): number[] {
+  const distinct = Array.from(new Set(rows.map((s) => s.total))).sort(
+    (a, b) => b - a
+  );
+  return rows.map((s) => distinct.indexOf(s.total) + 1);
+}
