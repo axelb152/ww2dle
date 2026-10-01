@@ -90,6 +90,10 @@ const FILE_OVERRIDES: Record<string, string> = {
   // The article's infobox leads with a map of the Japanese conquest of Burma, not a photo.
   yenangyaung:
     "British_troops_destroy_equipment_and_machinery_at_the_Yenangyaung_oilfields_in_Burma_before_retreating,_16_April_1942._IND989.jpg",
+  // The article's lead image is a modern, low-resolution photo of the port,
+  // not a wartime one. The committed file is hand-cropped to landscape,
+  // which also drops the IWM watermark; a re-fetch gets the square original.
+  tobruk: "Tobruk_1941_-_British_Matilda_tanks.jpg",
   // These five shared one photo: their article search resolved to
   // "List of World War II battles" and took its lead image. Pin the
   // right file as well as the right article, above.
