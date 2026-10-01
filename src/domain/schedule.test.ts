@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { battles, battlesWithImage } from "./battles";
+import { battles } from "./battles";
 import {
   battleForDay,
   CYCLE_LENGTH,
@@ -61,7 +61,7 @@ describe("battleForDay", () => {
   });
 
   it("only ever serves battles from the dataset", () => {
-    const codes = new Set(battlesWithImage.map((battle) => battle.code));
+    const codes = new Set(battles.map((battle) => battle.code));
 
     for (const day of dayStringsFrom(START_DATE, 500)) {
       expect(codes.has(battleForDay(day).code)).toBe(true);
@@ -105,9 +105,7 @@ describe("rotationAngleForDay", () => {
       );
       return (
         implied ===
-        battlesWithImage.findIndex(
-          (battle) => battle.code === battleForDay(day).code
-        )
+        battles.findIndex((battle) => battle.code === battleForDay(day).code)
       );
     });
 
