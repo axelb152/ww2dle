@@ -1,11 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
-import {
-  battles,
-  battleCodesWithImage,
-  battleCountry,
-  countryFlag,
-} from "./battles";
+import { battles, battleCountry, countryFlag } from "./battles";
+import battlePhotos from "./battlePhotos.json";
 
 const THEATERS = [
   "Western Europe",
@@ -56,10 +52,6 @@ describe("battles dataset", () => {
     }
   });
 
-  it("lists every code in battleCodesWithImage", () => {
-    expect(battleCodesWithImage).toEqual(battles.map((battle) => battle.code));
-  });
-
   it("has a present-day country (alpha-2) for every battle", () => {
     for (const battle of battles) {
       expect(battleCountry[battle.code]).toMatch(/^[A-Z]{2}$/);
@@ -84,5 +76,30 @@ describe("battles dataset", () => {
       );
       expect(fs.existsSync(imagePath)).toBe(true);
     }
+  });
+
+  // The daily rotation deals straight from `battles`, so a battle can only be
+  // served if whatever it renders is actually on disk. These two cover the
+  // photo manifest; the map fallback above covers the rest.
+  it("has the photo on disk for every battlePhotos entry", () => {
+    for (const [code, relativePath] of Object.entries(battlePhotos)) {
+      const photoPath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "public",
+        relativePath
+      );
+      expect([code, fs.existsSync(photoPath)]).toEqual([code, true]);
+    }
+  });
+
+  it("only maps photos to battles in the dataset", () => {
+    const codes = new Set(battles.map((battle) => battle.code));
+    const unknown = Object.keys(battlePhotos).filter(
+      (code) => !codes.has(code)
+    );
+
+    expect(unknown).toEqual([]);
   });
 });

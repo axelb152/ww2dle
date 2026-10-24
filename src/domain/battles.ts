@@ -988,12 +988,6 @@ export const battles: Battle[] = [
   },
 ];
 
-export const battleCodesWithImage = battles.map((battle) => battle.code);
-
-export const battlesWithImage = battles.filter((battle) =>
-  battleCodesWithImage.includes(battle.code)
-);
-
 export function getBattleName(language: string, battle: Battle) {
   // Battle names are shared across languages for now.
   return battle.name;

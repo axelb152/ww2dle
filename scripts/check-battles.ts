@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // Sanity checks for the WW2dle dataset.
 // Run with: npx ts-node --compiler-options '{"module":"commonjs"}' scripts/check-battles.ts
-import { battles, battleCodesWithImage, Theater } from "../src/domain/battles";
+import { battles, Theater } from "../src/domain/battles";
 
 let failures = 0;
 
@@ -37,11 +37,6 @@ for (const battle of battles) {
     `${battle.code}: bad longitude ${battle.longitude}`
   );
 }
-
-check(
-  battleCodesWithImage.length === battles.length,
-  "battleCodesWithImage must list every code"
-);
 
 const counts = new Map<Theater, number>();
 for (const battle of battles) {
