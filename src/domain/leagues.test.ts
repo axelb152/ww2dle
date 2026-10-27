@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import {
+  Standing,
   dayNumber,
   decodeLeague,
   encodeLeague,
@@ -9,6 +10,8 @@ import {
   standings,
   monthOf,
   monthsOf,
+  summarize,
+  ranksOf,
 } from "./leagues";
 
 describe("parseShareResult", () => {
@@ -200,5 +203,48 @@ describe("dayNumber", () => {
   it("produces a day number that parseShareResult can read back", () => {
     const text = `#WW2dle #${dayNumber("2026-07-31")} 6/6`;
     expect(parseShareResult(text)).toEqual({ day: 0, guessCount: 6 });
+  });
+});
+
+describe("summarize", () => {
+  it("totals games and points and takes the longest streak", () => {
+    const league: League = {
+      id: "s",
+      name: "T",
+      members: ["Ada", "Bob"],
+      // Ada solves both days (streak 2), Bob fails day 1 then solves day 2.
+      results: { 0: { Ada: 1, Bob: 0 }, 1: { Ada: 2, Bob: 3 } },
+    };
+    // Ada 8 + 7 = 15, Bob 3 + 6 = 9.
+    expect(summarize(standings(league))).toEqual({
+      games: 4,
+      points: 24,
+      bestStreak: 2,
+    });
+  });
+
+  it("is all zeros for an empty league", () => {
+    expect(summarize([])).toEqual({ games: 0, points: 0, bestStreak: 0 });
+  });
+});
+
+describe("ranksOf", () => {
+  const row = (member: string, total: number) =>
+    ({ member, total } as Standing);
+
+  it("shares a rank between equal totals and closes up after them", () => {
+    expect(
+      ranksOf([row("Ada", 40), row("Bob", 40), row("Cy", 31), row("Di", 12)])
+    ).toEqual([1, 1, 2, 3]);
+  });
+
+  it("ranks a clean run 1..n", () => {
+    expect(ranksOf([row("Ada", 9), row("Bob", 8), row("Cy", 7)])).toEqual([
+      1, 2, 3,
+    ]);
+  });
+
+  it("gives every member rank 1 when nobody has played", () => {
+    expect(ranksOf([row("Ada", 0), row("Bob", 0)])).toEqual([1, 1]);
   });
 });
