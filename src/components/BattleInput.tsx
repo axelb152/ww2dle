@@ -4,9 +4,8 @@ import Autosuggest from "react-autosuggest";
 import { useTranslation } from "react-i18next";
 import {
   battleFlagForName,
-  battles,
+  filterBattles,
   getBattleName,
-  sanitizeBattleName,
 } from "../domain/battles";
 
 interface BattleInputProps {
@@ -27,11 +26,9 @@ export function BattleInput({
       suggestions={suggestions}
       onSuggestionsFetchRequested={({ value }) =>
         setSuggestions(
-          battles
-            .map((c) => getBattleName(i18n.resolvedLanguage, c).toUpperCase())
-            .filter((battleName) =>
-              sanitizeBattleName(battleName).includes(sanitizeBattleName(value))
-            )
+          filterBattles(i18n.resolvedLanguage, value).map((c) =>
+            getBattleName(i18n.resolvedLanguage, c).toUpperCase()
+          )
         )
       }
       onSuggestionsClearRequested={() => setSuggestions([])}
