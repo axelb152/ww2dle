@@ -1142,6 +1142,76 @@ export const battleCountry: Record<string, string> = {
   "channel-dash": "FR",
 };
 
+// English name (first) and common aliases for every country in battleCountry,
+// so typing a country into the guess box lists the battles fought there.
+export const countryNames: Record<string, string[]> = {
+  AT: ["Austria"],
+  AU: ["Australia"],
+  BE: ["Belgium"],
+  BY: ["Belarus"],
+  CN: ["China"],
+  DE: ["Germany"],
+  DZ: ["Algeria"],
+  EE: ["Estonia"],
+  EG: ["Egypt"],
+  FI: ["Finland"],
+  FR: ["France"],
+  GB: ["United Kingdom", "UK", "Great Britain", "Britain", "England"],
+  GR: ["Greece"],
+  GU: ["Guam"],
+  HK: ["Hong Kong"],
+  HU: ["Hungary"],
+  ID: ["Indonesia"],
+  IN: ["India"],
+  IS: ["Iceland"],
+  IT: ["Italy"],
+  JP: ["Japan"],
+  KI: ["Kiribati"],
+  LY: ["Libya"],
+  MD: ["Moldova"],
+  MH: ["Marshall Islands"],
+  MM: ["Myanmar", "Burma"],
+  MN: ["Mongolia"],
+  MP: ["Northern Mariana Islands", "Mariana Islands"],
+  MT: ["Malta"],
+  MY: ["Malaysia"],
+  NL: ["Netherlands", "Holland"],
+  NO: ["Norway"],
+  PG: ["Papua New Guinea", "New Guinea"],
+  PH: ["Philippines"],
+  PL: ["Poland"],
+  PW: ["Palau"],
+  RU: ["Russia"],
+  SB: ["Solomon Islands"],
+  SG: ["Singapore"],
+  TN: ["Tunisia"],
+  UA: ["Ukraine"],
+  US: ["United States", "USA", "US", "America"],
+  UY: ["Uruguay"],
+};
+
+// Battles whose name contains the query, followed by battles fought in a
+// country whose name or alias starts with it ("ger" -> Berlin, Aachen...).
+// Exact country matches go first so "UK" isn't buried under Ukraine.
+export function filterBattles(language: string, query: string): Battle[] {
+  const sanitized = sanitizeBattleName(query);
+  const countryRank = (battle: Battle) => {
+    const names =
+      countryNames[battleCountry[battle.code]].map(sanitizeBattleName);
+    if (names.includes(sanitized)) return 0;
+    if (names.some((name) => name.startsWith(sanitized))) return 1;
+    return 2;
+  };
+
+  const byName = battles.filter((battle) =>
+    sanitizeBattleName(getBattleName(language, battle)).includes(sanitized)
+  );
+  const byCountry = battles
+    .filter((battle) => !byName.includes(battle) && countryRank(battle) < 2)
+    .sort((a, b) => countryRank(a) - countryRank(b));
+  return [...byName, ...byCountry];
+}
+
 // ISO alpha-2 -> flag emoji via regional-indicator symbols.
 export function countryFlag(code: string): string {
   return code

@@ -5,7 +5,12 @@ import {
   battleCodesWithImage,
   battleCountry,
   countryFlag,
+  countryNames,
+  filterBattles,
 } from "./battles";
+
+const codes = (query: string) =>
+  filterBattles("en", query).map((battle) => battle.code);
 
 const THEATERS = [
   "Western Europe",
@@ -66,6 +71,12 @@ describe("battles dataset", () => {
     }
   });
 
+  it("has an English name for every battle country", () => {
+    for (const iso of Object.values(battleCountry)) {
+      expect(countryNames[iso]?.length).toBeGreaterThan(0);
+    }
+  });
+
   it("renders a flag emoji from an alpha-2 code", () => {
     expect(countryFlag("US")).toBe("🇺🇸");
   });
@@ -84,5 +95,49 @@ describe("battles dataset", () => {
       );
       expect(fs.existsSync(imagePath)).toBe(true);
     }
+  });
+});
+
+describe("filterBattles", () => {
+  it("lists every battle for an empty query", () => {
+    expect(filterBattles("en", "")).toEqual(battles);
+  });
+
+  it("still matches battle names anywhere in the name", () => {
+    expect(codes("alamein")).toEqual(["el-alamein"]);
+  });
+
+  it("lists the battles fought in a typed country", () => {
+    expect(codes("Japan")).toEqual(["iwo-jima", "okinawa"]);
+    expect(codes("JAPAN")).toEqual(["iwo-jima", "okinawa"]);
+  });
+
+  it("matches the start of a country name while typing", () => {
+    const germany = battles
+      .filter((battle) => battleCountry[battle.code] === "DE")
+      .map((battle) => battle.code);
+    expect(codes("Ger")).toEqual(germany);
+  });
+
+  it("matches country aliases", () => {
+    expect(codes("Burma")).toEqual(["yenangyaung", "meiktila", "admin-box"]);
+  });
+
+  it("puts name matches first and lists each battle once", () => {
+    expect(codes("Greece")).toEqual(["greece", "cape-matapan", "crete"]);
+    expect(codes("Malta")).toEqual(["malta"]);
+  });
+
+  it("ranks an exact country match above a partial one", () => {
+    // "uk" is also the start of Ukraine (and inside Tobruk's name).
+    expect(codes("UK").slice(0, 3)).toEqual([
+      "tobruk",
+      "battle-of-britain",
+      "kiev-1941",
+    ]);
+  });
+
+  it("doesn't match a country by the middle of its name", () => {
+    expect(codes("many")).toEqual([]);
   });
 });

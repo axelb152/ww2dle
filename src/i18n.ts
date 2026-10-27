@@ -5,7 +5,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
-      placeholder: "Battle, operation...",
+      placeholder: "Battle, operation, country...",
       guess: "Guess",
       share: "Share",
       showOnWikipedia: "⚔️ on Wikipedia",

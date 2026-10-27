@@ -26,6 +26,10 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
           shows the coastline around the battle location.
         </div>
         <div>
+          Not sure of a name? Type a country, like Japan, to list the battles
+          fought there.
+        </div>
+        <div>
           After each guess, you will have the distance, the direction and the
           proximity from your guess to the target battle.
         </div>
